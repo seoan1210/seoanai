@@ -20,9 +20,9 @@ function PureSuggestedActions({
 }: SuggestedActionsProps) {
   const suggestedActions = [
     {
-      title: 'What are the advantages',
-      label: 'of using Next.js?',
-      action: 'What are the advantages of using Next.js?',
+      title: '계획 구성',
+      label: '계획 구성 해줘',
+      action: '계획 구성 해줘.',
     },
     {
       title: '코드 디버깅',
