@@ -25,19 +25,19 @@ function PureSuggestedActions({
       action: 'What are the advantages of using Next.js?',
     },
     {
-      title: 'Write code to',
-      label: `demonstrate djikstra's algorithm`,
-      action: `Write code to demonstrate djikstra's algorithm`,
+      title: '코드 디버깅',
+      label: `코드 디버깅 좀 도와줘`,
+      action: `코드 디버깅 좀 도와줘.`,
     },
     {
-      title: 'Help me write an essay',
-      label: `about silicon valley`,
-      action: `Help me write an essay about silicon valley`,
+      title: '문서 작성',
+      label: `문서 작성 도와줘`,
+      action: `문서 작성 도와줘.`,
     },
     {
-      title: 'What is the weather',
-      label: 'in San Francisco?',
-      action: 'What is the weather in San Francisco?',
+      title: '날씨 정보',
+      label: '오늘 날시 어때?',
+      action: '오늘 날시 어때?',
     },
   ];
 
