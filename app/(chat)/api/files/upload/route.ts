@@ -4,12 +4,16 @@ import { z } from 'zod';
 
 import { auth } from '@/app/(auth)/auth';
 
-// Blob은 Node.js 환경에서 사용할 수 없으므로 File 대신 Blob을 사용합니다.
+// Use Blob instead of File since File is not available in Node.js environment
 const FileSchema = z.object({
   file: z
     .instanceof(Blob)
     .refine((file) => file.size <= 5 * 1024 * 1024, {
-      message: '파일 용량은 5MB를 초과할 수 없습니다.',
+      message: 'File size should be less than 5MB',
+    })
+    // Update the file type based on the kind of files you want to accept
+    .refine((file) => ['image/jpeg', 'image/png'].includes(file.type), {
+      message: 'File type should be JPEG or PNG',
     }),
 });
 
@@ -35,6 +39,33 @@ export async function POST(request: Request) {
     const validatedFile = FileSchema.safeParse({ file });
 
     if (!validatedFile.success) {
+      const errorMessage = validatedFile.error.errors
+        .map((error) => error.message)
+        .join(', ');
+
+      return NextResponse.json({ error: errorMessage }, { status: 400 });
+    }
+
+    // Get filename from formData since Blob doesn't have name property
+    const filename = (formData.get('file') as File).name;
+    const fileBuffer = await file.arrayBuffer();
+
+    try {
+      const data = await put(`${filename}`, fileBuffer, {
+        access: 'public',
+      });
+
+      return NextResponse.json(data);
+    } catch (error) {
+      return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
+    }
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Failed to process request' },
+      { status: 500 },
+    );
+  }
+}    if (!validatedFile.success) {
       const errorMessage = validatedFile.error.errors
         .map((error) => error.message)
         .join(', ');
