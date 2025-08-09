@@ -65,29 +65,7 @@ export async function POST(request: Request) {
       { status: 500 },
     );
   }
-}    if (!validatedFile.success) {
-      const errorMessage = validatedFile.error.errors
-        .map((error) => error.message)
-        .join(', ');
-
-      return NextResponse.json({ error: errorMessage }, { status: 400 });
-    }
-
-    const filename = (formData.get('file') as File).name;
-    const fileBuffer = await file.arrayBuffer();
-
-    try {
-      const data = await put(`${filename}`, fileBuffer, {
-        access: 'public',
-      });
-
-      return NextResponse.json(data);
-    } catch (error) {
-      return NextResponse.json({ error: '업로드 실패' }, { status: 500 });
-    }
-  } catch (error) {
-    return NextResponse.json(
-      { error: 'Failed to process request' },
+}      { error: 'Failed to process request' },
       { status: 500 },
     );
   }
