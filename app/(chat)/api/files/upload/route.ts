@@ -96,6 +96,37 @@ export async function POST(request: Request) {
       { status: 500 },
     );
   }
+}    }
+
+    const validatedFile = FileSchema.safeParse({ file });
+
+    if (!validatedFile.success) {
+      const errorMessage = validatedFile.error.errors
+        .map((error) => error.message)
+        .join(', ');
+
+      return NextResponse.json({ error: errorMessage }, { status: 400 });
+    }
+
+    // Get filename from formData since Blob doesn't have name property
+    const filename = (formData.get('file') as File).name;
+    const fileBuffer = await file.arrayBuffer();
+
+    try {
+      const data = await put(`${filename}`, fileBuffer, {
+        access: 'public',
+      });
+
+      return NextResponse.json(data);
+    } catch (error) {
+      return NextResponse.json({ error: 'Upload failed' }, { status: 500 });
+    }
+  } catch (error) {
+    return NextResponse.json(
+      { error: 'Failed to process request' },
+      { status: 500 },
+    );
+  }
 }      { error: 'Failed to process request' },
       { status: 500 },
     );
