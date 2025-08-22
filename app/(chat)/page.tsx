@@ -10,7 +10,7 @@ import { redirect } from 'next/navigation';
 const introContent = `
 <div style="padding: 20px; line-height: 1.6;">
   <h1 style="font-size: 2em; font-weight: bold;">Seoan AI에 오신 것을 환영합니다! 당신의 똑똑한 AI 조수</h1>
-  <p>안녕하세요, Seoan AI가 드디어 세상에 나왔어요! 🚀 이곳은 당신의 아이디어를 현실로 만들어 줄 똑똑한 AI 조수입니다. 복잡한 업무부터 사소한 궁금증까지, Seoan AI가 당신의 가장 든든한 파트너가 되어드릴게요! 저희는 단순히 정보를 제공하는 것을 넘어, 당신이 더 효율적이고 창의적으로 일할 수 있도록 돕는 데 집중하고 있어요.</p>
+  <p>안녕하세요, Seoan AI가 드디어 세상에 나왔어요! 🚀 이곳은 당신의 아이디어를 현실로 만들어 줄 똑똑한 AI 친구 입니다. 복잡한 업무부터 사소한 궁금증까지, Seoan AI가 당신의 가장 든든한 파트너가 되어드릴게요! 저희는 단순히 정보를 제공하는 것을 넘어, 당신이 더 효율적이고 창의적으로 일할 수 있도록 돕는 데 집중하고 있어요.</p>
 
   <h2 style="font-size: 1.5em; font-weight: bold; margin-top: 30px;">Seoan AI가 도와드릴 수 있는 것들!</h2>
   <p><b>1. 막막한 계획을 세울 때</b><br />
