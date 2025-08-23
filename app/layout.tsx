@@ -64,6 +64,7 @@ export default async function RootLayout({
       className={`${geist.variable} ${geistMono.variable}`}
     >
       <head>
+        <meta name="google-site-verification" content="jrBn_-Ho69Vl_zfeTBPTr5SSzLMWMzkYcMO9oCkARKc" />
         <script
           dangerouslySetInnerHTML={{
             __html: THEME_COLOR_SCRIPT,
