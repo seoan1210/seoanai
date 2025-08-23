@@ -10,6 +10,9 @@ export const metadata: Metadata = {
   metadataBase: new URL('https://seoanai.vercel.app'),
   title: 'Seoan AI',
   description: 'Welcome Seoan AI',
+  verification: {
+    google: "jrBn_-Ho69Vl_zfeTBPTr5SSzLMWMzkYcMO9oCkARKc",
+  },
 };
 
 export const viewport = {
@@ -56,11 +59,14 @@ export default async function RootLayout({
   return (
     <html
       lang="en"
+      // `next-themes` injects an extra classname to the body element to avoid
+      // visual flicker before hydration. Hence the `suppressHydrationWarning`
+      // prop is necessary to avoid the React hydration mismatch warning.
+      // https://github.com/pacocoursey/next-themes?tab=readme-ov-file#with-app
       suppressHydrationWarning
       className={`${geist.variable} ${geistMono.variable}`}
     >
       <head>
-        <meta name="google-site-verification" content="jrBn_-Ho69Vl_zfeTBPTr5SSzLMWMzkYcMO9oCkARKc" />
         <script
           dangerouslySetInnerHTML={{
             __html: THEME_COLOR_SCRIPT,
