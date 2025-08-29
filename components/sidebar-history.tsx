@@ -153,7 +153,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
       <SidebarGroup>
         <SidebarGroupContent>
           <div className="px-2 text-zinc-500 w-full flex flex-row justify-center items-center text-sm gap-2">
-            로그인하여 이전 대화를 저장하고 다시 확인해 보세요
+            로그인하여 이전 대화를 저장하고 다시 확인해 보세요!
           </div>
         </SidebarGroupContent>
       </SidebarGroup>
@@ -248,4 +248,117 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
                             isActive={chat.id === id}
                             onDelete={(chatId) => {
                               setDeleteId(chatId);
-                              setShowDeleteDialog(true
+                              setShowDeleteDialog(true);
+                            }}
+                            setOpenMobile={setOpenMobile}
+                          />
+                        ))}
+                      </div>
+                    )}
+
+                    {groupedChats.lastWeek.length > 0 && (
+                      <div>
+                        <div className="px-2 py-1 text-xs text-sidebar-foreground/50">
+                          지난 7일
+                        </div>
+                        {groupedChats.lastWeek.map((chat) => (
+                          <ChatItem
+                            key={chat.id}
+                            chat={chat}
+                            isActive={chat.id === id}
+                            onDelete={(chatId) => {
+                              setDeleteId(chatId);
+                              setShowDeleteDialog(true);
+                            }}
+                            setOpenMobile={setOpenMobile}
+                          />
+                        ))}
+                      </div>
+                    )}
+
+                    {groupedChats.lastMonth.length > 0 && (
+                      <div>
+                        <div className="px-2 py-1 text-xs text-sidebar-foreground/50">
+                          지난 30일
+                        </div>
+                        {groupedChats.lastMonth.map((chat) => (
+                          <ChatItem
+                            key={chat.id}
+                            chat={chat}
+                            isActive={chat.id === id}
+                            onDelete={(chatId) => {
+                              setDeleteId(chatId);
+                              setShowDeleteDialog(true);
+                            }}
+                          />
+                        ))}
+                      </div>
+                    )}
+
+                    {groupedChats.older.length > 0 && (
+                      <div>
+                        <div className="px-2 py-1 text-xs text-sidebar-foreground/50">
+                          한 달 이상
+                        </div>
+                        {groupedChats.older.map((chat) => (
+                          <ChatItem
+                            key={chat.id}
+                            chat={chat}
+                            isActive={chat.id === id}
+                            onDelete={(chatId) => {
+                              setDeleteId(chatId);
+                              setShowDeleteDialog(true);
+                            }}
+                            setOpenMobile={setOpenMobile}
+                          />
+                        ))}
+                      </div>
+                    )}
+                  </div>
+                );
+              })()}
+          </SidebarMenu>
+
+          <motion.div
+            onViewportEnter={() => {
+              if (!isValidating && !hasReachedEnd) {
+                setSize((size) => size + 1);
+              }
+            }}
+          />
+
+          {hasReachedEnd ? (
+            <div className="px-2 text-zinc-500 w-full flex flex-row justify-center items-center text-sm gap-2 mt-8">
+              더 이상 대화 내역이 없습니다.
+            </div>
+          ) : (
+            <div className="p-2 text-zinc-500 dark:text-zinc-400 flex flex-row gap-2 items-center mt-8">
+              <div className="animate-spin">
+                <LoaderIcon />
+              </div>
+              <div>대화 기록을 불러오는 중...</div>
+            </div>
+          )}
+        </SidebarGroupContent>
+      </SidebarGroup>
+
+      <AlertDialog open={showDeleteDialog} onOpenChange={setShowDeleteDialog}>
+        <AlertDialogContent>
+          <AlertDialogHeader>
+            <AlertDialogTitle>정말 확실합니까?</AlertDialogTitle>
+            <AlertDialogDescription>
+              이 작업은 되돌릴 수 없습니다. 귀하의 채팅은 영구적으로 삭제되며
+              서버에서도 제거됩니다.
+            </AlertDialogDescription>
+          </AlertDialogHeader>
+          <AlertDialogFooter>
+            <AlertDialogCancel>취소</AlertDialogCancel>
+            <AlertDialogAction onClick={handleDelete}>
+              계속
+            </AlertDialogAction>
+          </AlertDialogFooter>
+        </AlertDialogContent>
+      </AlertDialog>
+    </>
+  );
+}
