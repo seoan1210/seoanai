@@ -9,12 +9,12 @@ export interface ChatModel {
 export const chatModels: Array<ChatModel> = [
   {
     id: 'chat-model',
-    name: 'Chat model',
-    description: 'Primary model for all-purpose chat',
+    name: '기본 모델',
+    description: '다목적 대화를 위한 기본 모델',
   },
   {
     id: 'chat-model-reasoning',
-    name: 'Reasoning model',
-    description: 'Uses advanced reasoning',
+    name: '고급 추론 모델',
+    description: '고급 추론, 수학 및 코딩 모델',
   },
 ];
