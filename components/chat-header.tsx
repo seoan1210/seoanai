@@ -47,8 +47,11 @@ function PureChatHeader({
                 router.refresh();
               }}
             >
-              <PlusIcon />
-              <span className="md:sr-only">새 채팅</span>
+              {/* 여기에 div를 추가해서 두 개의 자식을 하나로 감싸줬어요! */}
+              <div className="flex items-center space-x-2">
+                <PlusIcon />
+                <span className="md:sr-only">새 채팅</span>
+              </div>
             </Button>
           </TooltipTrigger>
           <TooltipContent>새 채팅</TooltipContent>
