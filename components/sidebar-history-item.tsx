@@ -77,7 +77,7 @@ const PureChatItem = ({
                 >
                   <div className="flex flex-row gap-2 items-center">
                     <LockIcon size={12} />
-                    <span비공개</span>
+                    <span>비공개</span>
                   </div>
                   {visibilityType === 'private' ? (
                     <CheckCircleFillIcon />
