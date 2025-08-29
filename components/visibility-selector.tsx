@@ -27,14 +27,14 @@ const visibilities: Array<{
 }> = [
   {
     id: 'private',
-    label: '비공개', // 'Private' to Korean
-    description: '나만 채팅에 접근할 수 있습니다', // 'Only you can access this chat' to Korean
+    label: '비공개', // 'Private'을 '비공개'로 변경
+    description: '나만 채팅에 접근할 수 있습니다', // 'Only you can access this chat'을 한국어로 변경
     icon: <LockIcon />,
   },
   {
     id: 'public',
-    label: '공개', // 'Public' to Korean
-    description: '링크가 있는 누구나 채팅에 접근할 수 있습니다', // 'Anyone with the link can access this chat' to Korean
+    label: '공개', // 'Public'을 '공개'로 변경
+    description: '링크가 있는 누구나 채팅에 접근할 수 있습니다', // 'Anyone with the link can access this chat'을 한국어로 변경
     icon: <GlobeIcon />,
   },
 ];
@@ -73,6 +73,7 @@ export function VisibilitySelector({
           variant="outline"
           className="hidden md:flex md:px-2 md:h-[34px]"
         >
+          {/* 여기를 하나의 div로 감싸서 오류를 해결했어요! */}
           <div className="flex items-center space-x-2">
             {selectedVisibility?.icon}
             <span>{selectedVisibility?.label}</span>
