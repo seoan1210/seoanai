@@ -36,8 +36,8 @@ function PureSuggestedActions({
     },
     {
       title: '날씨 정보',
-      label: '오늘 날시 어때?',
-      action: '오늘 날시 어때?',
+      label: '오늘 날씨 어때?',
+      action: '오늘 날씨 어때?',
     },
   ];
 
