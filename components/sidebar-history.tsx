@@ -194,7 +194,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
       <SidebarGroup>
         <SidebarGroupContent>
           <div className="px-2 text-zinc-500 w-full flex flex-row justify-center items-center text-sm gap-2">
-         대화를 시작하면 여기에 대화 내역이 나타납니다.
+            대화를 시작하면 여기에 대화 내역이 나타납니다.
           </div>
         </SidebarGroupContent>
       </SidebarGroup>
