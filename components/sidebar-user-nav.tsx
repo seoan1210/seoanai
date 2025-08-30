@@ -60,7 +60,7 @@ export function SidebarUserNav({ user }: { user: User }) {
                   className="rounded-full"
                 />
                 <span data-testid="user-email" className="truncate">
-                  {isGuest ? '손님' : user?.email}
+                  {isGuest ? 'guest' : user?.email}
                 </span>
                 <ChevronUp className="ml-auto" />
               </SidebarMenuButton>
@@ -102,7 +102,7 @@ export function SidebarUserNav({ user }: { user: User }) {
                   }
                 }}
               >
-                {isGuest ? '계정 로그인' : '로그아웃'}
+                {isGuest ? '계정으로 로그인' : '로그아웃'}
               </button>
             </DropdownMenuItem>
           </DropdownMenuContent>
