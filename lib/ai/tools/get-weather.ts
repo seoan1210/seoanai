@@ -2,7 +2,7 @@ import { tool } from 'ai';
 import { z } from 'zod';
 
 export const getWeather = tool({
-  description: 'Get the current weather at a location',
+  description: '현재 날씨의 위치를 불러오는 중',
   inputSchema: z.object({
     latitude: z.number(),
     longitude: z.number(),
