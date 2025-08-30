@@ -42,52 +42,44 @@ const introContent = `
 export default function ClientPage({ initialChatModel, session, id, modelIdFromCookie }: any) {
   const [showIntroModal, setShowIntroModal] = useState(true);
 
+  // ✨ 새로운 스타일 객체를 만들어 챗봇 컨테이너에 적용할 준비를 합니다.
+  const chatContainerGradientStyle = {
+    position: 'relative',
+    width: '100%',
+    height: '100vh',
+    overflow: 'hidden',
+    // 🎨 그라데이션 스타일을 여기에 직접 추가합니다.
+    background: 'linear-gradient(45deg, #ff9a9e, #fad0c4, #fad0c4, #ffecd2, #fbc2eb, #a6c1ee)',
+    backgroundSize: '400% 400%',
+    animation: 'gradient-animation 15s ease infinite',
+  };
+
   return (
     <>
-      {/* ✅ <style jsx global>을 사용해서 전체 페이지에 적용되게 수정했어!
-        이전 코드에서 <div dangerouslySetInnerHTML... /> 대신 이 방법이 더 안정적이고 권장되는 방식이야!
-      */}
-      <style jsx global>
-        {`
-          /* body와 html의 높이를 100%로 설정해서 배경이 전체를 덮도록 한다 */
-          body, html {
-            height: 100%;
-            margin: 0;
-            overflow: hidden;
-          }
-
-          /* 배경 애니메이션을 정의한다 */
-          .animated-gradient-background {
-            position: fixed;
-            top: 0;
-            left: 0;
-            width: 100%;
-            height: 100%;
-            z-index: -1;
-            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fad0c4, #ffecd2, #fbc2eb, #a6c1ee);
-            background-size: 400% 400%;
-            animation: gradient-animation 15s ease infinite;
-          }
-
-          @keyframes gradient-animation {
-            0% {
-              background-position: 0% 50%;
-            }
-            50% {
-              background-position: 100% 50%;
-            }
-            100% {
-              background-position: 0% 50%;
-            }
-          }
-        `}
-      </style>
-      {/* ✅ 이 div가 실제 그라데이션 배경 역할을 하게 돼! 
-        z-index: -1 덕분에 모든 콘텐츠 뒤로 깔려!
-      */}
-      <div className="animated-gradient-background" />
-
-      <div style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden' }}>
+      {/* 🎨 그라데이션 애니메이션 키프레임은 전역으로 정의해야 합니다. */}
+      <style jsx global>
+        {`
+          body, html {
+            height: 100%;
+            margin: 0;
+            overflow: hidden;
+          }
+          @keyframes gradient-animation {
+            0% {
+              background-position: 0% 50%;
+            }
+            50% {
+              background-position: 100% 50%;
+            }
+            100% {
+              background-position: 0% 50%;
+            }
+          }
+        `}
+      </style>
+      
+      {/* 🎯 이 div에 직접 그라데이션 스타일을 적용했습니다! */}
+      <div style={chatContainerGradientStyle}>
         {showIntroModal && (
           <div style={{
             position: 'fixed',
