@@ -142,7 +142,7 @@ export const textArtifact = new Artifact<'text', TextArtifactMetadata>({
       description: 'Copy to clipboard',
       onClick: ({ content }) => {
         navigator.clipboard.writeText(content);
-        toast.success('클립보드에 저장 되었습니다');
+        toast.success('문서가 클립보드에 저장 되었습니다');
       },
     },
   ],
