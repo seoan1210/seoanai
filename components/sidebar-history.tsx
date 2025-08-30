@@ -259,7 +259,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
                     {groupedChats.lastWeek.length > 0 && (
                       <div>
                         <div className="px-2 py-1 text-xs text-sidebar-foreground/50">
-                          지난 7일
+지난 7일
                         </div>
                         {groupedChats.lastWeek.map((chat) => (
                           <ChatItem
@@ -279,7 +279,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
                     {groupedChats.lastMonth.length > 0 && (
                       <div>
                         <div className="px-2 py-1 text-xs text-sidebar-foreground/50">
-                          지난 30일
+ 지난 30일
                         </div>
                         {groupedChats.lastMonth.map((chat) => (
                           <ChatItem
@@ -299,7 +299,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
                     {groupedChats.older.length > 0 && (
                       <div>
                         <div className="px-2 py-1 text-xs text-sidebar-foreground/50">
-                          한 달 이상
+ 한 달 이상
                         </div>
                         {groupedChats.older.map((chat) => (
                           <ChatItem
@@ -330,7 +330,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
 
           {hasReachedEnd ? (
             <div className="px-2 text-zinc-500 w-full flex flex-row justify-center items-center text-sm gap-2 mt-8">
-              더 이상 대화 내역이 없습니다.
+더 이상 대화 내역이 없습니다.
             </div>
           ) : (
             <div className="p-2 text-zinc-500 dark:text-zinc-400 flex flex-row gap-2 items-center mt-8">
@@ -348,13 +348,13 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
           <AlertDialogHeader>
             <AlertDialogTitle>채팅을 삭제하시겠습니까?</AlertDialogTitle>
             <AlertDialogDescription>
-              이 작업은 되돌릴 수 없습니다. 귀하의 채팅은 영구적으로 삭제되고 서버에서도 제거됩니다.
+이 작업은 되돌릴 수 없습니다. 귀하의 채팅은 영구적으로 삭제되고 서버에서도 제거됩니다.
             </AlertDialogDescription>
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>취소</AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete}>
-              계속
+계속
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
