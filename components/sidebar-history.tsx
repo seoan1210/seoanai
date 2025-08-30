@@ -239,7 +239,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
                     {groupedChats.yesterday.length > 0 && (
                       <div>
                         <div className="px-2 py-1 text-xs text-sidebar-foreground/50">
-                          어제
+ 어제
                         </div>
                         {groupedChats.yesterday.map((chat) => (
                           <ChatItem
@@ -354,7 +354,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
           <AlertDialogFooter>
             <AlertDialogCancel>취소</AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete}>
-계속
+              계속
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
