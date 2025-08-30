@@ -85,7 +85,7 @@ export const sheetArtifact = new Artifact<'sheet', Metadata>({
         const cleanedCsv = unparse(nonEmptyRows);
 
         navigator.clipboard.writeText(cleanedCsv);
-        toast.success('클립보드에 저장 되었습니다.');
+        toast.success('시트가 클립보드에 저장 되었습니다.');
       },
     },
   ],
