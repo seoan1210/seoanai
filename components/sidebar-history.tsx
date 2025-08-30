@@ -252,7 +252,6 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
                             }}
                             setOpenMobile={setOpenMobile}
                           />
-                        ))}
                       </div>
                     )}
 
@@ -272,7 +271,6 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
                             }}
                             setOpenMobile={setOpenMobile}
                           />
-                        ))}
                       </div>
                     )}
 
@@ -292,7 +290,6 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
                             }}
                             setOpenMobile={setOpenMobile}
                           />
-                        ))}
                       </div>
                     )}
 
@@ -312,7 +309,6 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
                             }}
                             setOpenMobile={setOpenMobile}
                           />
-                        ))}
                       </div>
                     )}
                   </div>
@@ -353,7 +349,10 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
           </AlertDialogHeader>
           <AlertDialogFooter>
             <AlertDialogCancel>취소</AlertDialogCancel>
-            <AlertDialogAction onClick={handleDelete}>
+            <AlertDialogAction
+              onClick={handleDelete}
+              className="dark:bg-white dark:text-black dark:hover:bg-zinc-200"
+            >
 계속
             </AlertDialogAction>
           </AlertDialogFooter>
