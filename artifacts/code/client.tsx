@@ -241,7 +241,7 @@ export const codeArtifact = new Artifact<'code', Metadata>({
       description: 'Copy code to clipboard',
       onClick: ({ content }) => {
         navigator.clipboard.writeText(content);
-        toast.success('Copied to clipboard!');
+        toast.success('클립보드에 저장 되었습니다.');
       },
     },
   ],
@@ -263,7 +263,7 @@ export const codeArtifact = new Artifact<'code', Metadata>({
     },
     {
       icon: <LogsIcon />,
-      description: 'Add logs',
+      description: '로그 추가',
       onClick: ({ sendMessage }) => {
         sendMessage({
           role: 'user',
