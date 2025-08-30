@@ -354,7 +354,7 @@ export function SidebarHistory({ user }: { user: User | undefined }) {
           <AlertDialogFooter>
             <AlertDialogCancel>취소</AlertDialogCancel>
             <AlertDialogAction onClick={handleDelete}>
-              계속
+계속
             </AlertDialogAction>
           </AlertDialogFooter>
         </AlertDialogContent>
