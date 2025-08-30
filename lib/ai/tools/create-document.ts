@@ -16,7 +16,7 @@ interface CreateDocumentProps {
 export const createDocument = ({ session, dataStream }: CreateDocumentProps) =>
   tool({
     description:
-      'Create a document for a writing or content creation activities. This tool will call other functions that will generate the contents of the document based on the title and kind.',
+      '글쓰기 또는 콘텐츠 제작 활동을 위한 문서를 만듭니다. 이 도구는 제목과 종류에 따라 문서의 내용을 생성하는 다른 기능을 호출합니다.',
     inputSchema: z.object({
       title: z.string(),
       kind: z.enum(artifactKinds),
@@ -70,7 +70,7 @@ export const createDocument = ({ session, dataStream }: CreateDocumentProps) =>
         id,
         title,
         kind,
-        content: 'A document was created and is now visible to the user.',
+        content: '문서가 생성 되었습니다.',
       };
     },
   });
