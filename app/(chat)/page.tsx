@@ -3,7 +3,6 @@ import { DEFAULT_CHAT_MODEL } from '@/lib/ai/models';
 import { generateUUID } from '@/lib/utils';
 import { auth } from '../(auth)/auth';
 import { redirect } from 'next/navigation';
-import ClientPage from './client-page';
 
 export default async function Page() {
   const session = await auth();
