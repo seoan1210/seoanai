@@ -169,7 +169,7 @@ function PureMultimodalInput({
       const { error } = await response.json();
       toast.error(error);
     } catch (error) {
-      toast.error('Failed to upload file, please try again!');
+      toast.error('파일 업로드를 실패하였습니다. 다시시도 해주세요요');
     }
   };
 
@@ -191,7 +191,7 @@ function PureMultimodalInput({
           ...successfullyUploadedAttachments,
         ]);
       } catch (error) {
-        console.error('Error uploading files!', error);
+        console.error('파일 업로드 오류류', error);
       } finally {
         setUploadQueue([]);
       }
@@ -279,7 +279,7 @@ function PureMultimodalInput({
       <Textarea
         data-testid="multimodal-input"
         ref={textareaRef}
-        placeholder="Send a message..."
+        placeholder="Seoan AI에게 물어보기"
         value={input}
         onChange={handleInput}
         className={cx(
@@ -297,7 +297,7 @@ function PureMultimodalInput({
             event.preventDefault();
 
             if (status !== 'ready') {
-              toast.error('Please wait for the model to finish its response!');
+              toast.error('AI의 답변이 끝날때까지 기다려주세요');
             } else {
               submitForm();
             }
