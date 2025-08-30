@@ -42,21 +42,8 @@ const introContent = `
 export default function ClientPage({ initialChatModel, session, id, modelIdFromCookie }: any) {
   const [showIntroModal, setShowIntroModal] = useState(true);
 
-  // ✨ 새로운 스타일 객체를 만들어 챗봇 컨테이너에 적용할 준비를 합니다.
-  const chatContainerGradientStyle = {
-    position: 'relative',
-    width: '100%',
-    height: '100vh',
-    overflow: 'hidden',
-    // 🎨 그라데이션 스타일을 여기에 직접 추가합니다.
-    background: 'linear-gradient(45deg, #ff9a9e, #fad0c4, #fad0c4, #ffecd2, #fbc2eb, #a6c1ee)',
-    backgroundSize: '400% 400%',
-    animation: 'gradient-animation 15s ease infinite',
-  };
-
   return (
     <>
-      {/* 🎨 그라데이션 애니메이션 키프레임은 전역으로 정의해야 합니다. */}
       <style jsx global>
         {`
           body, html {
@@ -64,6 +51,19 @@ export default function ClientPage({ initialChatModel, session, id, modelIdFromC
             margin: 0;
             overflow: hidden;
           }
+
+          .animated-gradient-background {
+            position: fixed;
+            top: 0;
+            left: 0;
+            width: 100%;
+            height: 100%;
+            z-index: -1;
+            background: linear-gradient(45deg, #ff9a9e, #fad0c4, #fad0c4, #ffecd2, #fbc2eb, #a6c1ee);
+            background-size: 400% 400%;
+            animation: gradient-animation 15s ease infinite;
+          }
+
           @keyframes gradient-animation {
             0% {
               background-position: 0% 50%;
@@ -77,9 +77,9 @@ export default function ClientPage({ initialChatModel, session, id, modelIdFromC
           }
         `}
       </style>
-      
-      {/* 🎯 이 div에 직접 그라데이션 스타일을 적용했습니다! */}
-      <div style={chatContainerGradientStyle}>
+      <div className="animated-gradient-background" />
+
+      <div style={{ position: 'relative', width: '100%', height: '100vh', overflow: 'hidden' }}>
         {showIntroModal && (
           <div style={{
             position: 'fixed',
