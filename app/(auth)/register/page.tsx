@@ -69,7 +69,7 @@ export default function Page() {
             >
               로그인
             </Link>
-            {' instead.'}
+            {' 하기 '}
           </p>
         </AuthForm>
       </div>
