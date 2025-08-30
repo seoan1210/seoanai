@@ -68,7 +68,7 @@ export const imageArtifact = new Artifact({
           }, 'image/png');
         };
 
-        toast.success('Copied image to clipboard!');
+        toast.success('이미지가 클립보드에 저장 되었습니다');
       },
     },
   ],
