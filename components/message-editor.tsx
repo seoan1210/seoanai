@@ -103,7 +103,7 @@ export function MessageEditor({
             regenerate();
           }}
         >
-          {isSubmitting ? 'Sending...' : 'Send'}
+          {isSubmitting ? '전송 중...' : 'Send'}
         </Button>
       </div>
     </div>
