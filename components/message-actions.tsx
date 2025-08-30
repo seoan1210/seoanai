@@ -54,7 +54,7 @@ export function PureMessageActions({
                 }
 
                 await copyToClipboard(textFromParts);
-                toast.success('Copied to clipboard!');
+                toast.success('클립보드에 저장 되었습니다');
               }}
             >
               <CopyIcon />
@@ -81,7 +81,7 @@ export function PureMessageActions({
                 });
 
                 toast.promise(upvote, {
-                  loading: 'Upvoting Response...',
+                  loading: '평가를 업로드 하는 중...',
                   success: () => {
                     mutate<Array<Vote>>(
                       `/api/vote?chatId=${chatId}`,
@@ -104,9 +104,9 @@ export function PureMessageActions({
                       { revalidate: false },
                     );
 
-                    return 'Upvoted Response!';
+                    return '감사합니다. 의견은 Seoan AI를 발전시키는데 큰 도움이 됩니다.';
                   },
-                  error: 'Failed to upvote response.',
+                  error: '평가를 업로드 하는 중에 문제가 발생하였습니다',
                 });
               }}
             >
@@ -134,7 +134,7 @@ export function PureMessageActions({
                 });
 
                 toast.promise(downvote, {
-                  loading: 'Downvoting Response...',
+                  loading: '평가를 업로드 하는 중...',
                   success: () => {
                     mutate<Array<Vote>>(
                       `/api/vote?chatId=${chatId}`,
@@ -157,9 +157,9 @@ export function PureMessageActions({
                       { revalidate: false },
                     );
 
-                    return 'Downvoted Response!';
+                    return '감사합니다. 의견은 Seoan AI를 발전시키는데 큰 도움이 됩니다.';
                   },
-                  error: 'Failed to downvote response.',
+                  error: '평가를 업로드 하는 중에 문제가 발생하였습니다',
                 });
               }}
             >
