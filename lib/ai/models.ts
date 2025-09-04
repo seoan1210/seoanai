@@ -9,12 +9,12 @@ export interface ChatModel {
 export const chatModels: Array<ChatModel> = [
   {
     id: 'chat-model',
-    name: 'Grok Vision',
-    description: 'Advanced multimodal model with vision and text capabilities',
+    name: '기본 모델',
+    description: '다목적 대화에 필요한 모델',
   },
   {
     id: 'chat-model-reasoning',
-    name: 'Grok Reasoning',
-    description: 'Uses advanced chain-of-thought reasoning for complex problems',
+    name: '추론 모델',
+    description: '고급 추론과 수학, 코딩, 문제해결에 적합한 모델',
   },
 ];
