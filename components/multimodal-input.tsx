@@ -161,7 +161,7 @@ function PureMultimodalInput({
       const { error } = await response.json();
       toast.error(error);
     } catch (error) {
-      toast.error('파일 업로드에 실패했어요, 다시 시도해주세요!');
+      toast.error('Failed to upload file, please try again!');
     }
   };
 
@@ -182,7 +182,7 @@ function PureMultimodalInput({
           ...successfullyUploadedAttachments,
         ]);
       } catch (error) {
-        console.error('파일 업로드 중 오류 발생!', error);
+        console.error('Error uploading files!', error);
       } finally {
         setUploadQueue([]);
       }
@@ -249,7 +249,7 @@ function PureMultimodalInput({
         onSubmit={(event) => {
           event.preventDefault();
           if (status !== 'ready') {
-            toast.error('모델이 답변을 끝낼 때까지 기다려주세요!');
+            toast.error('Please wait for the model to finish its response!');
           } else {
             submitForm();
           }
@@ -292,7 +292,7 @@ function PureMultimodalInput({
         <PromptInputTextarea
           data-testid="multimodal-input"
           ref={textareaRef}
-          placeholder="메시지 보내기..."
+          placeholder="Send a message..."
           value={input}
           onChange={handleInput}
           minHeight={72}
@@ -338,11 +338,6 @@ export const MultimodalInput = memo(
   },
 );
 
----
-
-### **하위 컴포넌트들**
-
-```jsx
 function PureAttachmentsButton({
   fileInputRef,
   status,
@@ -391,7 +386,7 @@ function PureModelSelectorCompact({
         type="button"
         className="text-xs focus:outline-none focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 data-[state=open]:ring-0 data-[state=closed]:ring-0"
       >
-        {selectedModel?.name || '모델 선택'}
+        {selectedModel?.name || 'Select model'}
       </PromptInputModelSelectTrigger>
       <PromptInputModelSelectContent>
         {chatModels.map((model) => (
