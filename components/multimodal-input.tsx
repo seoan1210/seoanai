@@ -54,8 +54,22 @@ function PureMultimodalInput({
   className,
   selectedVisibilityType,
   selectedModelId,
+}: {
+  chatId: string;
+  input: string;
+  setInput: Dispatch<SetStateAction<string>>;
+  status: UseChatHelpers<ChatMessage>['status'];
+  stop: () => void;
+  attachments: Array<Attachment>;
+  setAttachments: Dispatch<SetStateAction<Array<Attachment>>>;
+  messages: Array<UIMessage>;
+  setMessages: UseChatHelpers<ChatMessage>['setMessages'];
+  sendMessage: UseChatHelpers<ChatMessage>['sendMessage'];
+  className?: string;
+  selectedVisibilityType: VisibilityType;
+  selectedModelId: string;
 }) {
-  const textareaRef = useRef(null);
+  const textareaRef = useRef<HTMLTextAreaElement>(null);
   const { width } = useWindowSize();
 
   useEffect(() => {
@@ -84,22 +98,25 @@ function PureMultimodalInput({
   useEffect(() => {
     if (textareaRef.current) {
       const domValue = textareaRef.current.value;
+      // Prefer DOM value over localStorage to handle hydration
       const finalValue = domValue || localStorageInput || '';
       setInput(finalValue);
       adjustHeight();
     }
+    // Only run once after hydration
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
     setLocalStorageInput(input);
   }, [input, setLocalStorageInput]);
 
-  const handleInput = (event) => {
+  const handleInput = (event: React.ChangeEvent<HTMLTextAreaElement>) => {
     setInput(event.target.value);
   };
 
-  const fileInputRef = useRef(null);
-  const [uploadQueue, setUploadQueue] = useState([]);
+  const fileInputRef = useRef<HTMLInputElement>(null);
+  const [uploadQueue, setUploadQueue] = useState<Array<string>>([]);
 
   const submitForm = useCallback(() => {
     window.history.replaceState({}, '', `/chat/${chatId}`);
@@ -108,7 +125,7 @@ function PureMultimodalInput({
       role: 'user',
       parts: [
         ...attachments.map((attachment) => ({
-          type: 'file',
+          type: 'file' as const,
           url: attachment.url,
           name: attachment.name,
           mediaType: attachment.contentType,
@@ -139,7 +156,7 @@ function PureMultimodalInput({
     chatId,
   ]);
 
-  const uploadFile = async (file) => {
+  const uploadFile = async (file: File) => {
     const formData = new FormData();
     formData.append('file', file);
 
@@ -152,6 +169,7 @@ function PureMultimodalInput({
       if (response.ok) {
         const data = await response.json();
         const { url, pathname, contentType } = data;
+
         return {
           url,
           name: pathname,
@@ -166,8 +184,9 @@ function PureMultimodalInput({
   };
 
   const handleFileChange = useCallback(
-    async (event) => {
+    async (event: ChangeEvent<HTMLInputElement>) => {
       const files = Array.from(event.target.files || []);
+
       setUploadQueue(files.map((file) => file.name));
 
       try {
@@ -341,6 +360,9 @@ export const MultimodalInput = memo(
 function PureAttachmentsButton({
   fileInputRef,
   status,
+}: {
+  fileInputRef: React.MutableRefObject<HTMLInputElement | null>;
+  status: UseChatHelpers<ChatMessage>['status'];
 }) {
   return (
     <Button
@@ -362,6 +384,8 @@ const AttachmentsButton = memo(PureAttachmentsButton);
 
 function PureModelSelectorCompact({
   selectedModelId,
+}: {
+  selectedModelId: string;
 }) {
   const [optimisticModelId, setOptimisticModelId] = useState(selectedModelId);
 
@@ -409,6 +433,9 @@ const ModelSelectorCompact = memo(PureModelSelectorCompact);
 function PureStopButton({
   stop,
   setMessages,
+}: {
+  stop: () => void;
+  setMessages: UseChatHelpers<ChatMessage>['setMessages'];
 }) {
   return (
     <Button
@@ -431,6 +458,10 @@ function PureSendButton({
   submitForm,
   input,
   uploadQueue,
+}: {
+  submitForm: () => void;
+  input: string;
+  uploadQueue: Array<string>;
 }) {
   return (
     <Button
