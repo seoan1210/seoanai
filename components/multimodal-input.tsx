@@ -28,7 +28,7 @@ import {
   PromptInputModelSelectTrigger,
   PromptInputModelSelectContent,
 } from './elements/prompt-input';
-import { SelectItem } from '@/components/ui/select';
+import { SelectItem, SelectValue } from '@/components/ui/select';
 import equal from 'fast-deep-equal';
 import type { UseChatHelpers } from '@ai-sdk/react';
 import { AnimatePresence, motion } from 'framer-motion';
@@ -90,15 +90,21 @@ function PureMultimodalInput({
     }
   };
 
-  const [localStorageInput, setLocalStorageInput] = useLocalStorage('input', '');
+  const [localStorageInput, setLocalStorageInput] = useLocalStorage(
+    'input',
+    '',
+  );
 
   useEffect(() => {
     if (textareaRef.current) {
       const domValue = textareaRef.current.value;
+      // Prefer DOM value over localStorage to handle hydration
       const finalValue = domValue || localStorageInput || '';
       setInput(finalValue);
       adjustHeight();
     }
+    // Only run once after hydration
+    // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
   useEffect(() => {
@@ -124,7 +130,10 @@ function PureMultimodalInput({
           name: attachment.name,
           mediaType: attachment.contentType,
         })),
-        { type: 'text', text: input },
+        {
+          type: 'text',
+          text: input,
+        },
       ],
     });
 
@@ -136,38 +145,63 @@ function PureMultimodalInput({
     if (width && width > 768) {
       textareaRef.current?.focus();
     }
-  }, [input, setInput, attachments, sendMessage, setAttachments, setLocalStorageInput, width, chatId]);
+  }, [
+    input,
+    setInput,
+    attachments,
+    sendMessage,
+    setAttachments,
+    setLocalStorageInput,
+    width,
+    chatId,
+  ]);
 
   const uploadFile = async (file: File) => {
     const formData = new FormData();
     formData.append('file', file);
 
     try {
-      const response = await fetch('/api/files/upload', { method: 'POST', body: formData });
+      const response = await fetch('/api/files/upload', {
+        method: 'POST',
+        body: formData,
+      });
+
       if (response.ok) {
         const data = await response.json();
         const { url, pathname, contentType } = data;
-        return { url, name: pathname, contentType };
+
+        return {
+          url,
+          name: pathname,
+          contentType: contentType,
+        };
       }
       const { error } = await response.json();
       toast.error(error);
     } catch (error) {
-      toast.error('파일 업로드 실패. 다시 시도해주세요!');
+      toast.error('Failed to upload file, please try again!');
     }
   };
 
   const handleFileChange = useCallback(
     async (event: ChangeEvent<HTMLInputElement>) => {
       const files = Array.from(event.target.files || []);
+
       setUploadQueue(files.map((file) => file.name));
 
       try {
-        const uploadPromises = files.map(uploadFile);
+        const uploadPromises = files.map((file) => uploadFile(file));
         const uploadedAttachments = await Promise.all(uploadPromises);
-        const successfullyUploadedAttachments = uploadedAttachments.filter((a) => a !== undefined);
-        setAttachments((curr) => [...curr, ...successfullyUploadedAttachments]);
+        const successfullyUploadedAttachments = uploadedAttachments.filter(
+          (attachment) => attachment !== undefined,
+        );
+
+        setAttachments((currentAttachments) => [
+          ...currentAttachments,
+          ...successfullyUploadedAttachments,
+        ]);
       } catch (error) {
-        console.error('파일 업로드 오류', error);
+        console.error('Error uploading files!', error);
       } finally {
         setUploadQueue([]);
       }
@@ -178,7 +212,9 @@ function PureMultimodalInput({
   const { isAtBottom, scrollToBottom } = useScrollToBottom();
 
   useEffect(() => {
-    if (status === 'submitted') scrollToBottom();
+    if (status === 'submitted') {
+      scrollToBottom();
+    }
   }, [status, scrollToBottom]);
 
   return (
@@ -197,8 +233,8 @@ function PureMultimodalInput({
               className="rounded-full"
               size="icon"
               variant="outline"
-              onClick={(e) => {
-                e.preventDefault();
+              onClick={(event) => {
+                event.preventDefault();
                 scrollToBottom();
               }}
             >
@@ -208,13 +244,15 @@ function PureMultimodalInput({
         )}
       </AnimatePresence>
 
-      {messages.length === 0 && attachments.length === 0 && uploadQueue.length === 0 && (
-        <SuggestedActions
-          sendMessage={sendMessage}
-          chatId={chatId}
-          selectedVisibilityType={selectedVisibilityType}
-        />
-      )}
+      {messages.length === 0 &&
+        attachments.length === 0 &&
+        uploadQueue.length === 0 && (
+          <SuggestedActions
+            sendMessage={sendMessage}
+            chatId={chatId}
+            selectedVisibilityType={selectedVisibilityType}
+          />
+        )}
 
       <input
         type="file"
@@ -226,27 +264,46 @@ function PureMultimodalInput({
       />
 
       <PromptInput
-        className="bg-gray-50 rounded-3xl border border-gray-300 shadow-none dark:bg-sidebar dark:border-sidebar-border hover:ring-1 hover:ring-primary/30 focus-within:ring-1 focus-within:ring-primary/50"
-        onSubmit={(e) => {
-          e.preventDefault();
-          if (status !== 'ready') toast.error('모델이 응답을 완료할 때까지 기다려주세요!');
-          else submitForm();
+        className="bg-gray-50 rounded-3xl border border-gray-300 shadow-none transition-all duration-200 dark:bg-sidebar dark:border-sidebar-border hover:ring-1 hover:ring-primary/30 focus-within:ring-1 focus-within:ring-primary/50"
+        onSubmit={(event) => {
+          event.preventDefault();
+          if (status !== 'ready') {
+            toast.error('Please wait for the model to finish its response!');
+          } else {
+            submitForm();
+          }
         }}
       >
         {(attachments.length > 0 || uploadQueue.length > 0) && (
-          <div data-testid="attachments-preview" className="flex overflow-x-scroll flex-row gap-2 items-end px-3 py-2">
+          <div
+            data-testid="attachments-preview"
+            className="flex overflow-x-scroll flex-row gap-2 items-end px-3 py-2"
+          >
             {attachments.map((attachment) => (
               <PreviewAttachment
                 key={attachment.url}
                 attachment={attachment}
                 onRemove={() => {
-                  setAttachments((curr) => curr.filter((a) => a.url !== attachment.url));
-                  if (fileInputRef.current) fileInputRef.current.value = '';
+                  setAttachments((currentAttachments) =>
+                    currentAttachments.filter((a) => a.url !== attachment.url),
+                  );
+                  if (fileInputRef.current) {
+                    fileInputRef.current.value = '';
+                  }
                 }}
               />
             ))}
+
             {uploadQueue.map((filename) => (
-              <PreviewAttachment key={filename} attachment={{ url: '', name: filename, contentType: '' }} isUploading={true} />
+              <PreviewAttachment
+                key={filename}
+                attachment={{
+                  url: '',
+                  name: filename,
+                  contentType: '',
+                }}
+                isUploading={true}
+              />
             ))}
           </div>
         )}
@@ -254,17 +311,17 @@ function PureMultimodalInput({
         <PromptInputTextarea
           data-testid="multimodal-input"
           ref={textareaRef}
-          placeholder="메시지 보내기..."
+          placeholder="Send a message..."
           value={input}
           onChange={handleInput}
           minHeight={72}
           maxHeight={200}
-          disableAutoResize
-          className="text-base resize-none py-4 px-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] bg-transparent !border-0 outline-none"
+          disableAutoResize={true}
+          className="text-base resize-none py-4 px-4 [&::-webkit-scrollbar]:hidden [-ms-overflow-style:none] [scrollbar-width:none] bg-transparent !border-0 !border-none outline-none ring-0 focus-visible:ring-0 focus-visible:ring-offset-0 focus-visible:outline-none"
           rows={1}
           autoFocus
         />
-        <PromptInputToolbar className="px-4 py-2 !border-t-0 shadow-none dark:!border-transparent">
+        <PromptInputToolbar className="px-4 py-2 !border-t-0 !border-top-0 shadow-none dark:!border-transparent dark:border-0">
           <PromptInputTools className="gap-2">
             <AttachmentsButton fileInputRef={fileInputRef} status={status} />
             <ModelSelectorCompact selectedModelId={selectedModelId} />
@@ -292,19 +349,27 @@ export const MultimodalInput = memo(
     if (prevProps.input !== nextProps.input) return false;
     if (prevProps.status !== nextProps.status) return false;
     if (!equal(prevProps.attachments, nextProps.attachments)) return false;
-    if (prevProps.selectedVisibilityType !== nextProps.selectedVisibilityType) return false;
+    if (prevProps.selectedVisibilityType !== nextProps.selectedVisibilityType)
+      return false;
     if (prevProps.selectedModelId !== nextProps.selectedModelId) return false;
+
     return true;
   },
 );
 
-function PureAttachmentsButton({ fileInputRef, status }: { fileInputRef: React.MutableRefObject<HTMLInputElement | null>; status: UseChatHelpers<ChatMessage>['status'] }) {
+function PureAttachmentsButton({
+  fileInputRef,
+  status,
+}: {
+  fileInputRef: React.MutableRefObject<HTMLInputElement | null>;
+  status: UseChatHelpers<ChatMessage>['status'];
+}) {
   return (
     <Button
       data-testid="attachments-button"
       className="rounded-md rounded-bl-lg p-[7px] h-fit dark:border-zinc-700 hover:dark:bg-zinc-900 hover:bg-zinc-200"
-      onClick={(e) => {
-        e.preventDefault();
+      onClick={(event) => {
+        event.preventDefault();
         fileInputRef.current?.click();
       }}
       disabled={status !== 'ready'}
@@ -317,9 +382,16 @@ function PureAttachmentsButton({ fileInputRef, status }: { fileInputRef: React.M
 
 const AttachmentsButton = memo(PureAttachmentsButton);
 
-function PureModelSelectorCompact({ selectedModelId }: { selectedModelId: string }) {
+function PureModelSelectorCompact({
+  selectedModelId,
+}: {
+  selectedModelId: string;
+}) {
   const [optimisticModelId, setOptimisticModelId] = useState(selectedModelId);
-  const selectedModel = chatModels.find((model) => model.id === optimisticModelId);
+
+  const selectedModel = chatModels.find(
+    (model) => model.id === optimisticModelId,
+  );
 
   return (
     <PromptInputModelSelect
@@ -328,19 +400,26 @@ function PureModelSelectorCompact({ selectedModelId }: { selectedModelId: string
         const model = chatModels.find((m) => m.name === modelName);
         if (model) {
           setOptimisticModelId(model.id);
-          startTransition(() => saveChatModelAsCookie(model.id));
+          startTransition(() => {
+            saveChatModelAsCookie(model.id);
+          });
         }
       }}
     >
-      <PromptInputModelSelectTrigger type="button" className="text-xs focus:outline-none focus:ring-0">
-        {selectedModel?.name || '모델 선택'}
+      <PromptInputModelSelectTrigger
+        type="button"
+        className="text-xs focus:outline-none focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 data-[state=open]:ring-0 data-[state=closed]:ring-0"
+      >
+        {selectedModel?.name || 'Select model'}
       </PromptInputModelSelectTrigger>
       <PromptInputModelSelectContent>
         {chatModels.map((model) => (
           <SelectItem key={model.id} value={model.name}>
             <div className="flex flex-col gap-1 items-start py-1">
               <div className="font-medium">{model.name}</div>
-              <div className="text-xs text-muted-foreground">{model.description}</div>
+              <div className="text-xs text-muted-foreground">
+                {model.description}
+              </div>
             </div>
           </SelectItem>
         ))}
@@ -351,13 +430,19 @@ function PureModelSelectorCompact({ selectedModelId }: { selectedModelId: string
 
 const ModelSelectorCompact = memo(PureModelSelectorCompact);
 
-function PureStopButton({ stop, setMessages }: { stop: () => void; setMessages: UseChatHelpers<ChatMessage>['setMessages'] }) {
+function PureStopButton({
+  stop,
+  setMessages,
+}: {
+  stop: () => void;
+  setMessages: UseChatHelpers<ChatMessage>['setMessages'];
+}) {
   return (
     <Button
       data-testid="stop-button"
       className="rounded-full p-1.5 h-fit border dark:border-zinc-600"
-      onClick={(e) => {
-        e.preventDefault();
+      onClick={(event) => {
+        event.preventDefault();
         stop();
         setMessages((messages) => messages);
       }}
@@ -367,4 +452,35 @@ function PureStopButton({ stop, setMessages }: { stop: () => void; setMessages: 
   );
 }
 
-const StopButton = memo(Pure
+const StopButton = memo(PureStopButton);
+
+function PureSendButton({
+  submitForm,
+  input,
+  uploadQueue,
+}: {
+  submitForm: () => void;
+  input: string;
+  uploadQueue: Array<string>;
+}) {
+  return (
+    <Button
+      data-testid="send-button"
+      className="rounded-full p-1.5 h-fit border dark:border-zinc-600"
+      onClick={(event) => {
+        event.preventDefault();
+        submitForm();
+      }}
+      disabled={input.length === 0 || uploadQueue.length > 0}
+    >
+      <ArrowUpIcon size={14} />
+    </Button>
+  );
+}
+
+const SendButton = memo(PureSendButton, (prevProps, nextProps) => {
+  if (prevProps.uploadQueue.length !== nextProps.uploadQueue.length)
+    return false;
+  if (prevProps.input !== nextProps.input) return false;
+  return true;
+});
