@@ -150,6 +150,7 @@ export function Chat({
         <div className="sticky bottom-0 flex gap-2 px-4 pb-4 mx-auto w-full bg-background md:pb-6 md:max-w-3xl z-[1] border-t-0">
           {!isReadonly && (
             <MultimodalInput
+              className=""
               chatId={id}
               input={input}
               setInput={setInput}
