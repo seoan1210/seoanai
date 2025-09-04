@@ -19,37 +19,37 @@ function PureSuggestedActions({
   selectedVisibilityType,
 }: SuggestedActionsProps) {
   const suggestedActions = [
-    'What are the advantages of using Next.js?',
-    'Write code to demonstrate Dijkstra\'s algorithm',
-    'Help me write an essay about Silicon Valley',
-    'What is the weather in San Francisco?',
+    'Next.js를 사용할 때의 장점은 뭐야',
+    '다익스트라 알고리즘을 구현하는 코드 예시를 보여줘',
+    '실리콘밸리에 대한 에세이를 쓰는 데 도와줘',
+    '오늘 날씨는 어때?',
   ];
 
   return (
     <div data-testid="suggested-actions" className="grid sm:grid-cols-2 gap-2 w-full">
-        {suggestedActions.map((suggestedAction, index) => (
-          <motion.div
-            initial={{ opacity: 0, y: 20 }}
-            animate={{ opacity: 1, y: 0 }}
-            exit={{ opacity: 0, y: 20 }}
-            transition={{ delay: 0.05 * index }}
-            key={suggestedAction}
+      {suggestedActions.map((suggestedAction, index) => (
+        <motion.div
+          initial={{ opacity: 0, y: 20 }}
+          animate={{ opacity: 1, y: 0 }}
+          exit={{ opacity: 0, y: 20 }}
+          transition={{ delay: 0.05 * index }}
+          key={suggestedAction}
+        >
+          <Suggestion
+            suggestion={suggestedAction}
+            onClick={(suggestion) => {
+              window.history.replaceState({}, '', `/chat/${chatId}`);
+              sendMessage({
+                role: 'user',
+                parts: [{ type: 'text', text: suggestion }],
+              });
+            }}
+            className="text-left w-full h-auto whitespace-normal p-3"
           >
-            <Suggestion
-              suggestion={suggestedAction}
-              onClick={(suggestion) => {
-                window.history.replaceState({}, '', `/chat/${chatId}`);
-                sendMessage({
-                  role: 'user',
-                  parts: [{ type: 'text', text: suggestion }],
-                });
-              }}
-              className="text-left w-full h-auto whitespace-normal p-3"
-            >
-              {suggestedAction}
-            </Suggestion>
-          </motion.div>
-        ))}
+            {suggestedAction}
+          </Suggestion>
+        </motion.div>
+      ))}
     </div>
   );
 }
