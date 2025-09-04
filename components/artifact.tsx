@@ -222,9 +222,8 @@ function PureArtifact({
   const [isToolbarVisible, setIsToolbarVisible] = useState(false);
 
   /*
-   * NOTE: if there are no documents, or if
-   * the documents are being fetched, then
-   * we mark it as the current version.
+   * 참고: 문서가 없거나 문서를 불러오는 중이면
+   * 현재 버전으로 표시함.
    */
 
   const isCurrentVersion =
@@ -240,7 +239,7 @@ function PureArtifact({
   );
 
   if (!artifactDefinition) {
-    throw new Error('Artifact definition not found!');
+    throw new Error('아티팩트 정의를 찾을 수 없습니다!');
   }
 
   useEffect(() => {
@@ -421,17 +420,17 @@ function PureArtifact({
 
                   {isContentDirty ? (
                     <div className="text-sm text-muted-foreground">
-                      Saving changes...
+                      저장 중...
                     </div>
                   ) : document ? (
                     <div className="text-sm text-muted-foreground">
-                      {`Updated ${formatDistance(
+                      {`${formatDistance(
                         new Date(document.createdAt),
                         new Date(),
                         {
                           addSuffix: true,
                         },
-                      )}`}
+                      )}에 업데이트됨`}
                     </div>
                   ) : (
                     <div className="w-32 h-3 mt-2 bg-muted-foreground/20 rounded-md animate-pulse" />
