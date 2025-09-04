@@ -30,7 +30,7 @@ export function PureMessageActions({
   return (
     <Actions>
         <Action
-          tooltip="Copy"
+          tooltip="복사"
           onClick={async () => {
             const textFromParts = message.parts
               ?.filter((part) => part.type === 'text')
@@ -39,19 +39,19 @@ export function PureMessageActions({
               .trim();
 
             if (!textFromParts) {
-              toast.error("There's no text to copy!");
+              toast.error('복사할 텍스트가 없습니다!');
               return;
             }
 
             await copyToClipboard(textFromParts);
-            toast.success('Copied to clipboard!');
+            toast.success('클립보드에 복사됨!');
           }}
         >
           <CopyIcon />
         </Action>
 
         <Action
-          tooltip="Upvote Response"
+          tooltip="좋아요"
           data-testid="message-upvote"
           disabled={vote?.isUpvoted}
               onClick={async () => {
@@ -65,7 +65,7 @@ export function PureMessageActions({
                 });
 
                 toast.promise(upvote, {
-                  loading: 'Upvoting Response...',
+                  loading: '좋아요 처리 중...',
                   success: () => {
                     mutate<Array<Vote>>(
                       `/api/vote?chatId=${chatId}`,
@@ -88,9 +88,9 @@ export function PureMessageActions({
                       { revalidate: false },
                     );
 
-                    return 'Upvoted Response!';
+                    return '좋아요 완료!';
                   },
-                  error: 'Failed to upvote response.',
+                  error: '좋아요 처리 실패',
                 });
               }}
         >
@@ -98,7 +98,7 @@ export function PureMessageActions({
         </Action>
 
         <Action
-          tooltip="Downvote Response"
+          tooltip="싫어요"
           data-testid="message-downvote"
           disabled={vote && !vote.isUpvoted}
               onClick={async () => {
@@ -112,7 +112,7 @@ export function PureMessageActions({
                 });
 
                 toast.promise(downvote, {
-                  loading: 'Downvoting Response...',
+                  loading: '싫어요 처리 중...',
                   success: () => {
                     mutate<Array<Vote>>(
                       `/api/vote?chatId=${chatId}`,
@@ -135,9 +135,9 @@ export function PureMessageActions({
                       { revalidate: false },
                     );
 
-                    return 'Downvoted Response!';
+                    return '싫어요 완료!';
                   },
-                  error: 'Failed to downvote response.',
+                  error: '싫어요 처리 실패',
                 });
               }}
         >
