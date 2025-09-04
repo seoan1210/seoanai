@@ -44,7 +44,7 @@ export function PureMessageActions({
             }
 
             await copyToClipboard(textFromParts);
-            toast.success('클립보드에 복사됨!');
+            toast.success('클립보드에 복사 되었습니다');
           }}
         >
           <CopyIcon />
