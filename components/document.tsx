@@ -11,13 +11,13 @@ const getActionText = (
 ) => {
   switch (type) {
     case 'create':
-      return tense === 'present' ? 'Creating' : 'Created';
+      return tense === 'present' ? '생성 중' : '생성됨';
     case 'update':
-      return tense === 'present' ? 'Updating' : 'Updated';
+      return tense === 'present' ? '업데이트 중' : '업데이트됨';
     case 'request-suggestions':
       return tense === 'present'
-        ? 'Adding suggestions'
-        : 'Added suggestions to';
+        ? '추천 추가 중'
+        : '추천이 추가됨';
     default:
       return null;
   }
@@ -42,9 +42,7 @@ function PureDocumentToolResult({
       className="bg-background cursor-pointer border py-2 px-3 rounded-xl w-fit flex flex-row gap-3 items-start"
       onClick={(event) => {
         if (isReadonly) {
-          toast.error(
-            'Viewing files in shared chats is currently not supported.',
-          );
+          toast.error('공유 채팅에서는 파일 보기 기능을 지원하지 않습니다.');
           return;
         }
 
@@ -108,9 +106,7 @@ function PureDocumentToolCall({
       className="cursor pointer w-fit border py-2 px-3 rounded-xl flex flex-row items-start justify-between gap-3"
       onClick={(event) => {
         if (isReadonly) {
-          toast.error(
-            'Viewing files in shared chats is currently not supported.',
-          );
+          toast.error('공유 채팅에서는 파일 보기 기능을 지원하지 않습니다.');
           return;
         }
 
@@ -148,7 +144,7 @@ function PureDocumentToolCall({
               : type === 'update' && 'description' in args
                 ? `"${args.description}"`
                 : type === 'request-suggestions'
-                  ? 'for document'
+                  ? '문서에 대해'
                   : ''
           }`}
         </div>
