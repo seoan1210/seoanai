@@ -27,14 +27,14 @@ const visibilities: Array<{
 }> = [
   {
     id: 'private',
-    label: 'Private',
-    description: 'Only you can access this chat',
+    label: '비공개',
+    description: '나만 이 대화에 접근할 수 있어요',
     icon: <LockIcon />,
   },
   {
     id: 'public',
-    label: 'Public',
-    description: 'Anyone with the link can access this chat',
+    label: '공개',
+    description: '링크가 있는 누구나 이 대화에 접근할 수 있어요',
     icon: <GlobeIcon />,
   },
 ];
