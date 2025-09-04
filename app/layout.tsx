@@ -7,7 +7,7 @@ import './globals.css';
 import { SessionProvider } from 'next-auth/react';
 
 export const metadata: Metadata = {
-  metadataBase: new URL('seoanai.vercel.app'),
+  metadataBase: new URL('https://seoanai.vercel.app'),
   title: 'Seoan AI',
   description: 'Welcome to Seoan AI.',
 };
