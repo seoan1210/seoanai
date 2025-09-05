@@ -2,10 +2,10 @@ import { tool } from 'ai';
 import { z } from 'zod';
 
 export const getWeather = tool({
-  description: 'Get the current weather at a location',
+  description: '특정 위치의 현재 날씨를 가져옵니다.',
   inputSchema: z.object({
-    latitude: z.number(),
-    longitude: z.number(),
+    latitude: z.number().describe('위도'),
+    longitude: z.number().describe('경도'),
   }),
   execute: async ({ latitude, longitude }) => {
     const response = await fetch(
