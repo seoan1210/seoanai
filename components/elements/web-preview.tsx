@@ -77,6 +77,7 @@ export const WebPreview = ({
   );
 };
 
+// 🔹 Navigation bar
 export type WebPreviewNavigationProps = ComponentProps<'div'>;
 
 export const WebPreviewNavigation = ({
@@ -124,6 +125,7 @@ export const WebPreviewNavigationButton = ({
   </TooltipProvider>
 );
 
+// 🔹 URL 입력창
 export type WebPreviewUrlProps = ComponentProps<typeof Input>;
 
 export const WebPreviewUrl = ({
@@ -154,6 +156,7 @@ export const WebPreviewUrl = ({
   );
 };
 
+// 🔹 iframe 본문
 export type WebPreviewBodyProps = ComponentProps<'iframe'> & {
   loading?: ReactNode;
 };
@@ -180,6 +183,7 @@ export const WebPreviewBody = ({
   );
 };
 
+// 🔹 Console 출력
 export type WebPreviewConsoleProps = ComponentProps<'div'> & {
   logs?: Array<{
     level: 'log' | 'warn' | 'error';
