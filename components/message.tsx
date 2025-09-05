@@ -330,7 +330,7 @@ export const ThinkingMessage = () => {
 
         <div className="flex flex-col gap-4 w-full">
           <MessageContent className="bg-transparent -ml-4">
-            <div className="text-muted-foreground">Hmm...</div>
+            <div className="text-muted-foreground">잠시만 기다려 주세요...</div>
           </MessageContent>
         </div>
       </div>
