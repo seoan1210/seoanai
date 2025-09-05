@@ -7,7 +7,6 @@ export default function PrivacyModal() {
   const [open, setOpen] = useState(false);
   const [checked, setChecked] = useState(false);
 
-  // 쿠키 읽기
   const getCookie = (name: string) => {
     if (typeof document === 'undefined') return null;
     const value = `; ${document.cookie}`;
@@ -16,7 +15,6 @@ export default function PrivacyModal() {
     return null;
   };
 
-  // 쿠키 설정 (만료일: 365일)
   const setCookie = (name: string, value: string, days: number) => {
     if (typeof document === 'undefined') return;
     const date = new Date();
@@ -26,14 +24,12 @@ export default function PrivacyModal() {
 
   useEffect(() => {
     const agreed = getCookie('seoan-ai-privacy');
-    if (!agreed) {
-      setOpen(true);
-    }
+    if (!agreed) setOpen(true);
   }, []);
 
   const handleAgree = () => {
     if (checked) {
-      setCookie('seoan-ai-privacy', 'true', 365); // 1년 동안 유지
+      setCookie('seoan-ai-privacy', 'true', 365);
       setOpen(false);
     } else {
       alert('개인정보 처리방침에 동의해야 서비스를 이용할 수 있습니다.');
@@ -50,8 +46,10 @@ export default function PrivacyModal() {
         exit={{ scale: 0.9, opacity: 0 }}
         className="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6"
       >
-        <h2 className="text-xl font-bold mb-4">Seoan AI 개인정보 처리방침</h2>
-        <div className="text-gray-700 mb-6 max-h-60 overflow-y-auto text-sm space-y-2">
+        <h2 className="text-2xl font-bold mb-4 text-gray-900">
+          Seoan AI 개인정보 처리방침
+        </h2>
+        <div className="text-gray-800 mb-6 max-h-60 overflow-y-auto text-sm space-y-2">
           <p>
             Seoan AI는 이용자의 개인정보 보호를 최우선으로 생각하며,
             관련 법령을 준수합니다. 본 서비스는 다음과 같은 기준으로
@@ -82,19 +80,19 @@ export default function PrivacyModal() {
           </ol>
         </div>
 
-        <label className="flex items-center mb-4">
+        <label className="flex items-center mb-4 text-gray-900">
           <input
             type="checkbox"
             checked={checked}
             onChange={(e) => setChecked(e.target.checked)}
-            className="mr-2"
+            className="mr-2 accent-blue-600"
           />
           개인정보 처리방침에 동의합니다.
         </label>
 
         <button
           onClick={handleAgree}
-          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-xl"
+          className="w-full bg-blue-600 hover:bg-blue-700 text-white py-2 rounded-xl font-semibold"
         >
           동의하고 시작하기
         </button>
