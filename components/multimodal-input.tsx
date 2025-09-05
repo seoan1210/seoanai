@@ -98,12 +98,12 @@ function PureMultimodalInput({
   useEffect(() => {
     if (textareaRef.current) {
       const domValue = textareaRef.current.value;
-      // Prefer DOM value over localStorage to handle hydration
+      // hydration 문제 해결 위해 DOM 값 우선
       const finalValue = domValue || localStorageInput || '';
       setInput(finalValue);
       adjustHeight();
     }
-    // Only run once after hydration
+    // hydration 후 한 번만 실행
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -179,7 +179,7 @@ function PureMultimodalInput({
       const { error } = await response.json();
       toast.error(error);
     } catch (error) {
-      toast.error('Failed to upload file, please try again!');
+      toast.error('파일 업로드에 실패했습니다. 다시 시도해주세요!');
     }
   };
 
@@ -201,7 +201,7 @@ function PureMultimodalInput({
           ...successfullyUploadedAttachments,
         ]);
       } catch (error) {
-        console.error('Error uploading files!', error);
+        console.error('파일 업로드 중 오류 발생!', error);
       } finally {
         setUploadQueue([]);
       }
@@ -268,7 +268,7 @@ function PureMultimodalInput({
         onSubmit={(event) => {
           event.preventDefault();
           if (status !== 'ready') {
-            toast.error('Please wait for the model to finish its response!');
+            toast.error('모델 응답이 끝날 때까지 기다려주세요!');
           } else {
             submitForm();
           }
@@ -311,7 +311,7 @@ function PureMultimodalInput({
         <PromptInputTextarea
           data-testid="multimodal-input"
           ref={textareaRef}
-          placeholder="Send a message..."
+          placeholder="메시지를 입력하세요..."
           value={input}
           onChange={handleInput}
           minHeight={72}
@@ -410,7 +410,7 @@ function PureModelSelectorCompact({
         type="button"
         className="text-xs focus:outline-none focus:ring-0 focus:ring-offset-0 focus-visible:ring-0 focus-visible:ring-offset-0 data-[state=open]:ring-0 data-[state=closed]:ring-0"
       >
-        {selectedModel?.name || 'Select model'}
+        {selectedModel?.name || '모델 선택'}
       </PromptInputModelSelectTrigger>
       <PromptInputModelSelectContent>
         {chatModels.map((model) => (
