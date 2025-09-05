@@ -19,9 +19,9 @@ function PureSuggestedActions({
   selectedVisibilityType,
 }: SuggestedActionsProps) {
   const suggestedActions = [
-    'Next.js를 사용할 때의 장점은 뭐야',
-    '다익스트라 알고리즘을 구현하는 코드 예시를 보여줘',
-    '실리콘밸리에 대한 에세이를 쓰는 데 도와줘',
+    '계획 구성 해줘',
+    '코드 디버깅 도와줘',
+    '문서 작성 도와줘',
     '오늘 날씨는 어때?',
   ];
 
