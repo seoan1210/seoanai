@@ -17,18 +17,16 @@ export const requestSuggestions = ({
   dataStream,
 }: RequestSuggestionsProps) =>
   tool({
-    description: 'Request suggestions for a document',
+    description: '문서에 대한 문장별 개선 제안을 요청합니다.',
     inputSchema: z.object({
-      documentId: z
-        .string()
-        .describe('The ID of the document to request edits'),
+      documentId: z.string().describe('수정을 요청할 문서의 ID'),
     }),
     execute: async ({ documentId }) => {
       const document = await getDocumentById({ id: documentId });
 
       if (!document || !document.content) {
         return {
-          error: 'Document not found',
+          error: '문서를 찾을 수 없습니다.',
         };
       }
 
@@ -39,13 +37,13 @@ export const requestSuggestions = ({
       const { elementStream } = streamObject({
         model: myProvider.languageModel('artifact-model'),
         system:
-          'You are a help writing assistant. Given a piece of writing, please offer suggestions to improve the piece of writing and describe the change. It is very important for the edits to contain full sentences instead of just words. Max 5 suggestions.',
+          '너는 글쓰기 도우미야. 주어진 글을 읽고 더 나아질 수 있는 수정 제안을 해줘. 제안은 반드시 **전체 문장 단위**로 작성해야 하며, 수정 이유도 함께 설명해. 최대 5개까지 제안해.',
         prompt: document.content,
         output: 'array',
         schema: z.object({
-          originalSentence: z.string().describe('The original sentence'),
-          suggestedSentence: z.string().describe('The suggested sentence'),
-          description: z.string().describe('The description of the suggestion'),
+          originalSentence: z.string().describe('원래 문장'),
+          suggestedSentence: z.string().describe('수정된 문장'),
+          description: z.string().describe('수정 이유 설명'),
         }),
       });
 
@@ -86,7 +84,7 @@ export const requestSuggestions = ({
         id: documentId,
         title: document.title,
         kind: document.kind,
-        message: 'Suggestions have been added to the document',
+        message: '문서에 제안이 추가되었습니다.',
       };
     },
   });
