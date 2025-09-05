@@ -51,26 +51,35 @@ export default function PrivacyModal() {
         className="bg-white rounded-2xl shadow-xl max-w-lg w-full p-6"
       >
         <h2 className="text-xl font-bold mb-4">Seoan AI 개인정보 처리방침</h2>
-        <div className="text-gray-700 mb-6 max-h-60 overflow-y-auto text-sm">
-          <p className="mb-2">
-            Seoan AI는 이용자의 개인정보 보호를 최우선으로 생각합니다.
+        <div className="text-gray-700 mb-6 max-h-60 overflow-y-auto text-sm space-y-2">
+          <p>
+            Seoan AI는 이용자의 개인정보 보호를 최우선으로 생각하며,
+            관련 법령을 준수합니다. 본 서비스는 다음과 같은 기준으로
+            개인정보를 처리합니다.
           </p>
-          <ul className="list-disc pl-5 space-y-1">
-            <li>수집 항목: 채팅 입력 내용, 브라우저 정보(쿠키 등)</li>
-            <li>이용 목적: 답변 생성 및 서비스 품질 개선</li>
-            <li>보관 기간: 대화 내용은 저장되지 않으며, 일시적으로만 처리됩니다.</li>
+          <ol className="list-decimal pl-5 space-y-1">
             <li>
-              자세한 사항은{' '}
-              <a
-                href="/privacy"
-                className="text-blue-600 underline"
-                target="_blank"
-              >
-                개인정보 처리방침 전문
-              </a>
-              을 확인하세요.
+              <strong>수집 항목:</strong> 채팅 입력 내용, 브라우저 정보(쿠키 등)
             </li>
-          </ul>
+            <li>
+              <strong>수집 방법:</strong> 사용자가 채팅 입력 시 자동 수집
+            </li>
+            <li>
+              <strong>이용 목적:</strong> 답변 생성 및 서비스 품질 개선
+            </li>
+            <li>
+              <strong>보관 및 이용 기간:</strong> 대화 내용은 저장되지 않고
+              일시적으로만 처리됩니다. 쿠키는 최대 1년간 보관됩니다.
+            </li>
+            <li>
+              <strong>제3자 제공:</strong> 수집한 개인정보는 외부에 제공되지
+              않습니다.
+            </li>
+            <li>
+              <strong>이용자 권리:</strong> 개인정보 열람·정정·삭제 및 처리
+              정지 요구 가능
+            </li>
+          </ol>
         </div>
 
         <label className="flex items-center mb-4">
