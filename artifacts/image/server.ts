@@ -12,10 +12,14 @@ export const imageDocumentHandler = createDocumentHandler<'image'>({
     const promptText = imagePrompt(title);
     const imageModel = myProvider.imageModel('grok-2-image');
 
-    // doGenerate 사용
+    // ImageModelV2CallOptions에 맞게 doGenerate 호출
     const result = await imageModel.doGenerate({
       prompt: promptText,
-      size: '1024x1024', // 필요에 따라 변경 가능
+      size: '1024x1024',
+      n: 1,               // 한 장 생성
+      aspectRatio: '1:1', // 정사각형
+      seed: undefined,    // 필요 시 시드 지정
+      providerOptions: {}, // Grok 모델 옵션
     });
 
     // Base64 스트리밍
@@ -27,6 +31,7 @@ export const imageDocumentHandler = createDocumentHandler<'image'>({
       });
     }
 
+    // 마지막 이미지 반환
     return result.images[result.images.length - 1].base64;
   },
 
@@ -38,6 +43,10 @@ export const imageDocumentHandler = createDocumentHandler<'image'>({
     const result = await imageModel.doGenerate({
       prompt: promptText,
       size: '1024x1024',
+      n: 1,
+      aspectRatio: '1:1',
+      seed: undefined,
+      providerOptions: {},
     });
 
     for (const img of result.images) {
