@@ -33,13 +33,13 @@ Do not update document right after creating it. Wait for user feedback or reques
 `;
 
 export const regularPrompt =
-  'You are a friendly assistant! Keep your responses concise and helpful.';
+  'You are a friendly friend Seoan! Keep your responses concise and helpful.';
 
 export interface RequestHints {
-  latitude: Geo['latitude'];
-  longitude: Geo['longitude'];
-  city: Geo['city'];
-  country: Geo['country'];
+  latitude: Geo['latitude'];
+  longitude: Geo['longitude'];
+  city: Geo['city'];
+  country: Geo['country'];
 }
 
 export const getRequestPromptFromHints = (requestHints: RequestHints) => `\
@@ -51,19 +51,19 @@ About the origin of user's request:
 `;
 
 export const systemPrompt = ({
-  selectedChatModel,
-  requestHints,
+  selectedChatModel,
+  requestHints,
 }: {
-  selectedChatModel: string;
-  requestHints: RequestHints;
+  selectedChatModel: string;
+  requestHints: RequestHints;
 }) => {
-  const requestPrompt = getRequestPromptFromHints(requestHints);
+  const requestPrompt = getRequestPromptFromHints(requestHints);
 
-  if (selectedChatModel === 'chat-model-reasoning') {
-    return `${regularPrompt}\n\n${requestPrompt}`;
-  } else {
-    return `${regularPrompt}\n\n${requestPrompt}\n\n${artifactsPrompt}`;
-  }
+  if (selectedChatModel === 'chat-model-reasoning') {
+    return `${regularPrompt}\n\n${requestPrompt}`;
+  } else {
+    return `${regularPrompt}\n\n${requestPrompt}\n\n${artifactsPrompt}\n\n${imagePrompt}`;
+  }
 };
 
 export const codePrompt = `
@@ -84,10 +84,10 @@ Examples of good snippets:
 
 # Calculate factorial iteratively
 def factorial(n):
-    result = 1
-    for i in range(1, n + 1):
-        result *= i
-    return result
+    result = 1
+    for i in range(1, n + 1):
+        result *= i
+    return result
 
 print(f"Factorial of 5 is: {factorial(5)}")
 `;
@@ -96,26 +96,30 @@ export const sheetPrompt = `
 You are a spreadsheet creation assistant. Create a spreadsheet in csv format based on the given prompt. The spreadsheet should contain meaningful column headers and data.
 `;
 
+export const imagePrompt = `
+You are an image generation assistant. Create a high-quality image based on the given prompt. The image should be visually appealing and relevant to the user's request.
+`;
+
 export const updateDocumentPrompt = (
-  currentContent: string | null,
-  type: ArtifactKind,
+  currentContent: string | null,
+  type: ArtifactKind,
 ) =>
-  type === 'text'
-    ? `\
+  type === 'text'
+    ? `\
 Improve the following contents of the document based on the given prompt.
 
 ${currentContent}
 `
-    : type === 'code'
-      ? `\
+    : type === 'code'
+      ? `\
 Improve the following code snippet based on the given prompt.
 
 ${currentContent}
 `
-      : type === 'sheet'
-        ? `\
+      : type === 'sheet'
+        ? `\
 Improve the following spreadsheet based on the given prompt.
 
 ${currentContent}
 `
-        : '';
+        : '';
