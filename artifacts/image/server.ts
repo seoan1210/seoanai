@@ -8,11 +8,12 @@ import { createDocumentHandler } from '@/lib/artifacts/server';
 export const imageDocumentHandler = createDocumentHandler<'image'>({
   kind: 'image',
 
+  // 새로운 이미지 생성
   onCreateDocument: async ({ title, dataStream }) => {
     let draftContent = '';
 
     const { fullStream } = streamObject({
-      model: myProvider.imageModel('grok-2-image'),
+      model: myProvider.imageModel('grok-2-image'), // Grok 이미지 모델
       prompt: title,
       schema: z.object({
         base64: z.string(),
@@ -33,6 +34,7 @@ export const imageDocumentHandler = createDocumentHandler<'image'>({
     return draftContent;
   },
 
+  // 기존 이미지 업데이트
   onUpdateDocument: async ({ document, description, dataStream }) => {
     let draftContent = '';
 
