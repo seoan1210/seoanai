@@ -5,6 +5,9 @@ import { CopyIcon, RedoIcon, UndoIcon } from '@/components/icons';
 import { ImageEditor } from '@/components/image-editor';
 import { toast } from 'sonner';
 
+/**
+ * Image Artifact 설정
+ */
 export const imageArtifact = new Artifact({
   kind: 'image',
   description: 'Grok AI를 사용해 이미지를 생성할 수 있습니다',
@@ -52,47 +55,51 @@ export const imageArtifact = new Artifact({
     },
   ],
   toolbar: [],
-  generateImage: async (prompt: string, setArtifact: any) => {
-    try {
-      setArtifact((a: any) => ({ ...a, status: 'loading' }));
-
-      const res = await fetch('/api/grok-image', {
-        method: 'POST',
-        headers: { 'Content-Type': 'application/json' },
-        body: JSON.stringify({ prompt }),
-      });
-
-      if (!res.body) throw new Error('스트리밍 불가');
-
-      const reader = res.body.getReader();
-      const decoder = new TextDecoder();
-
-      while (true) {
-        const { done, value } = await reader.read();
-        if (done) break;
-
-        const chunk = decoder.decode(value);
-        chunk.split('\n').forEach((line) => {
-          if (!line) return;
-          try {
-            const part = JSON.parse(line);
-            if (part.type === 'data-imageDelta') {
-              setArtifact((a: any) => ({
-                ...a,
-                content: part.data,
-                isVisible: true,
-                status: 'streaming',
-              }));
-            }
-          } catch {}
-        });
-      }
-
-      setArtifact((a: any) => ({ ...a, status: 'done' }));
-    } catch (err) {
-      console.error(err);
-      toast.error('이미지 생성 실패');
-      setArtifact((a: any) => ({ ...a, status: 'error' }));
-    }
-  },
 });
+
+/**
+ * 이미지 생성 함수 (Artifact 외부)
+ */
+export const generateImage = async (prompt: string, setArtifact: any) => {
+  try {
+    setArtifact((a: any) => ({ ...a, status: 'loading' }));
+
+    const res = await fetch('/api/grok-image', {
+      method: 'POST',
+      headers: { 'Content-Type': 'application/json' },
+      body: JSON.stringify({ prompt }),
+    });
+
+    if (!res.body) throw new Error('스트리밍 불가');
+
+    const reader = res.body.getReader();
+    const decoder = new TextDecoder();
+
+    while (true) {
+      const { done, value } = await reader.read();
+      if (done) break;
+
+      const chunk = decoder.decode(value);
+      chunk.split('\n').forEach((line) => {
+        if (!line) return;
+        try {
+          const part = JSON.parse(line);
+          if (part.type === 'data-imageDelta') {
+            setArtifact((a: any) => ({
+              ...a,
+              content: part.data,
+              isVisible: true,
+              status: 'streaming',
+            }));
+          }
+        } catch {}
+      });
+    }
+
+    setArtifact((a: any) => ({ ...a, status: 'done' }));
+  } catch (err) {
+    console.error(err);
+    toast.error('이미지 생성 실패');
+    setArtifact((a: any) => ({ ...a, status: 'error' }));
+  }
+};
