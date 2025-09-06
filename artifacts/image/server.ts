@@ -1,7 +1,8 @@
+// artifacts/image/server.ts
+
 import { createDocumentHandler } from '@/lib/artifacts/server';
 import { myProvider } from '@/lib/ai/providers';
 import { imagePrompt } from '@/lib/ai/prompts';
-import { z } from 'zod';
 
 export const imageDocumentHandler = createDocumentHandler<'image'>({
   kind: 'image',
@@ -9,16 +10,15 @@ export const imageDocumentHandler = createDocumentHandler<'image'>({
   // 새로운 이미지 생성
   onCreateDocument: async ({ title, dataStream }) => {
     const promptText = imagePrompt(title);
-
-    // ImageModel 전용 호출
     const imageModel = myProvider.imageModel('grok-2-image');
 
-    const result = await imageModel.generate({
+    // doGenerate 사용
+    const result = await imageModel.doGenerate({
       prompt: promptText,
-      size: '1024x1024', // 필요에 따라 조정
+      size: '1024x1024', // 필요에 따라 변경 가능
     });
 
-    // Base64 스트리밍 처리
+    // Base64 스트리밍
     for (const img of result.images) {
       dataStream.write({
         type: 'data-imageDelta',
@@ -27,7 +27,6 @@ export const imageDocumentHandler = createDocumentHandler<'image'>({
       });
     }
 
-    // 마지막 이미지 반환
     return result.images[result.images.length - 1].base64;
   },
 
@@ -36,7 +35,7 @@ export const imageDocumentHandler = createDocumentHandler<'image'>({
     const promptText = imagePrompt(description);
     const imageModel = myProvider.imageModel('grok-2-image');
 
-    const result = await imageModel.generate({
+    const result = await imageModel.doGenerate({
       prompt: promptText,
       size: '1024x1024',
     });
