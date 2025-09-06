@@ -3,8 +3,6 @@ import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
 import PrivacyModal from '@/components/privacy-modal';
-import { Analytics } from '@vercel/analytics/react'; // 🔹 이 부분을 추가합니다.
-import { SpeedInsights } from "@vercel/speed-insights/next"
 
 import './globals.css';
 import { SessionProvider } from 'next-auth/react';
