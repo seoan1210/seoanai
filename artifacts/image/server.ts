@@ -1,23 +1,21 @@
-// artifact/image/server.ts
-
 import { z } from 'zod';
 import { streamObject } from 'ai';
 import { myProvider } from '@/lib/ai/providers';
 import { createDocumentHandler } from '@/lib/artifacts/server';
+import { imagePrompt } from '@/lib/ai/prompts';
 
 export const imageDocumentHandler = createDocumentHandler<'image'>({
   kind: 'image',
 
-  // 새로운 이미지 생성
   onCreateDocument: async ({ title, dataStream }) => {
     let draftContent = '';
 
+    const promptText = imagePrompt(title); // 프롬프트 생성
+
     const { fullStream } = streamObject({
-      model: myProvider.imageModel('grok-2-image'), // Grok 이미지 모델
-      prompt: title,
-      schema: z.object({
-        base64: z.string(),
-      }),
+      model: myProvider.imageModel('grok-2-image'),
+      prompt: promptText,
+      schema: z.object({ base64: z.string() }),
     });
 
     for await (const delta of fullStream) {
@@ -34,16 +32,14 @@ export const imageDocumentHandler = createDocumentHandler<'image'>({
     return draftContent;
   },
 
-  // 기존 이미지 업데이트
   onUpdateDocument: async ({ document, description, dataStream }) => {
     let draftContent = '';
+    const promptText = imagePrompt(description);
 
     const { fullStream } = streamObject({
       model: myProvider.imageModel('grok-2-image'),
-      prompt: description,
-      schema: z.object({
-        base64: z.string(),
-      }),
+      prompt: promptText,
+      schema: z.object({ base64: z.string() }),
     });
 
     for await (const delta of fullStream) {
