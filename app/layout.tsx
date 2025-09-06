@@ -79,7 +79,6 @@ export default async function RootLayout({
             {/* 🔹 여기에서 PrivacyModal 실행 */}
             <PrivacyModal />
             {children}
-            <Analytics /> {/* 🔹 이 부분을 추가합니다. */}
           </SessionProvider>
         </ThemeProvider>
       </body>
