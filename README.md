@@ -1,8 +1,9 @@
+
 # Seoan AI Chatbot
 
-## 개요
+## 프로젝트 개요
 
-Seoan AI Chatbot은 Next.js와 Grok 기반으로 개발된 한국어 최적화 AI 챗봇 프로젝트입니다. 단순한 대화 기능을 넘어 글쓰기, 코드 작성, 문서 편집 등 다양한 생산성 작업을 지원합니다. 사용자는 직관적인 대화형 인터페이스를 통해 원하는 작업을 자연스럽게 요청할 수 있으며, Grok 모델이 맥락을 이해하고 이에 맞는 답변을 제공합니다. 이 챗봇은 학습, 업무, 개인 프로젝트 등 여러 상황에서 효율성을 높이고자 설계되었습니다.
+Seoan AI Chatbot은 Next.js와 Grok 기반으로 개발된 한국어 최적화 AI 챗봇 프로젝트입니다. 사용자는 대화형 인터페이스를 통해 글쓰기, 코드 작성, 문서 편집 등 다양한 작업을 지원하며, 업무와 학습을 돕는 지능형 도구로 설계되었습니다.
 
 ## 주요 기능
 
@@ -21,8 +22,8 @@ Seoan AI Chatbot은 Next.js와 Grok 기반으로 개발된 한국어 최적화 A
 
 ## 설치 및 실행
 
-1. 프로젝트 클론: `git clone https://github.com/username/repo-name.git`
-2. 디렉토리 이동: `cd repo-name`
+1. 프로젝트 클론: `git clone https://github.com/seoan1210/seoanai.git`
+2. 디렉토리 이동: `cd seoanai`
 3. 의존성 설치: `npm install`
 4. 개발 서버 실행: `npm run dev`
 5. 프로덕션 빌드 및 실행: `npm run build && npm start`
@@ -40,13 +41,16 @@ Seoan AI Chatbot은 Next.js와 Grok 기반으로 개발된 한국어 최적화 A
 * `components/`: UI 컴포넌트 (AuthForm, Toast, Popup 등)
 * `app/`: Next.js App Router 기반 페이지
 * `lib/`: 유틸 함수 및 API 연동 로직
+* `public/`: 정적 파일 (이미지, 폰트 등)
+* `tests/`: 테스트 코드
 
 ## 향후 계획
 
-* 사용자 대화 기록 저장 및 검색 기능 강화
-* Grok 최신 버전 연동 및 성능 개선
-* 한국어 환경 최적화 지속 및 UX 고도화
+* 사용자 대화 기록 저장 및 검색 기능 추가
+* Grok 최신 버전 연동
+* 한국어 환경 최적화 지속
 
 ## 라이선스
 
 MIT License
+
