@@ -124,7 +124,7 @@ export const codeArtifact = new Artifact<'code', Metadata>({
             {
               id: runId,
               contents: [],
-              status: '진행 중',
+              status: 'in_progress', // ✅ 영어
             },
           ],
         }));
@@ -155,7 +155,7 @@ export const codeArtifact = new Artifact<'code', Metadata>({
                   {
                     id: runId,
                     contents: [{ type: 'text', value: message }],
-                    status: '패키지 로딩 중',
+                    status: 'loading_packages', // ✅ 영어
                   },
                 ],
               }));
@@ -186,7 +186,7 @@ export const codeArtifact = new Artifact<'code', Metadata>({
               {
                 id: runId,
                 contents: outputContent,
-                status: '완료',
+                status: 'completed', // ✅ 영어
               },
             ],
           }));
@@ -198,7 +198,7 @@ export const codeArtifact = new Artifact<'code', Metadata>({
               {
                 id: runId,
                 contents: [{ type: 'text', value: error.message }],
-                status: '실패',
+                status: 'failed', // ✅ 영어
               },
             ],
           }));
