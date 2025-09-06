@@ -16,23 +16,25 @@ export const imageDocumentHandler = createDocumentHandler<'image'>({
     const result = await imageModel.doGenerate({
       prompt: promptText,
       size: '1024x1024',
-      n: 1,               // 한 장 생성
-      aspectRatio: '1:1', // 정사각형
-      seed: undefined,    // 필요 시 시드 지정
-      providerOptions: {}, // Grok 모델 옵션
+      n: 1,
+      aspectRatio: '1:1',
+      seed: undefined,
+      providerOptions: {},
     });
 
     // Base64 스트리밍
     for (const img of result.images) {
       dataStream.write({
         type: 'data-imageDelta',
-        data: img.base64,
+        data: typeof img === 'string' ? img : Buffer.from(img).toString('base64'),
         transient: true,
       });
     }
 
     // 마지막 이미지 반환
-    return result.images[result.images.length - 1].base64;
+    return typeof result.images[0] === 'string'
+      ? result.images[0]
+      : Buffer.from(result.images[0]).toString('base64');
   },
 
   // 기존 이미지 업데이트
@@ -52,11 +54,13 @@ export const imageDocumentHandler = createDocumentHandler<'image'>({
     for (const img of result.images) {
       dataStream.write({
         type: 'data-imageDelta',
-        data: img.base64,
+        data: typeof img === 'string' ? img : Buffer.from(img).toString('base64'),
         transient: true,
       });
     }
 
-    return result.images[result.images.length - 1].base64;
+    return typeof result.images[0] === 'string'
+      ? result.images[0]
+      : Buffer.from(result.images[0]).toString('base64');
   },
 });
