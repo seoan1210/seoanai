@@ -6,7 +6,7 @@ import { ImageEditor } from '@/components/image-editor';
 import { toast } from 'sonner';
 
 /**
- * Image Artifact 설정
+ * Image Artifact
  */
 export const imageArtifact = new Artifact({
   kind: 'image',
@@ -58,7 +58,7 @@ export const imageArtifact = new Artifact({
 });
 
 /**
- * 이미지 생성 함수 (Artifact 외부)
+ * generateImage 외부 함수
  */
 export const generateImage = async (prompt: string, setArtifact: any) => {
   try {
