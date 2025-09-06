@@ -22,17 +22,14 @@ const OUTPUT_HANDLERS = {
     import base64
     from matplotlib import pyplot as plt
 
-    # Clear any existing plots
     plt.clf()
     plt.close('all')
-
-    # Switch to agg backend
     plt.switch_backend('agg')
 
     def setup_matplotlib_output():
         def custom_show():
             if plt.gcf().get_size_inches().prod() * plt.gcf().dpi ** 2 > 25_000_000:
-                print("Warning: Plot size too large, reducing quality")
+                print("경고: 그래프 크기가 너무 큽니다. 품질을 낮춥니다.")
                 plt.gcf().set_dpi(100)
 
             png_buf = io.BytesIO()
@@ -48,7 +45,7 @@ const OUTPUT_HANDLERS = {
         plt.show = custom_show
   `,
   basic: `
-    # Basic output capture setup
+    # 기본 출력 캡처 설정
   `,
 };
 
@@ -69,7 +66,7 @@ interface Metadata {
 export const codeArtifact = new Artifact<'code', Metadata>({
   kind: 'code',
   description:
-    'Useful for code generation; Code execution is only available for python code.',
+    '코드 생성에 유용합니다; 코드 실행은 파이썬 코드만 가능합니다.',
   initialize: async ({ setMetadata }) => {
     setMetadata({
       outputs: [],
@@ -127,7 +124,7 @@ export const codeArtifact = new Artifact<'code', Metadata>({
             {
               id: runId,
               contents: [],
-              status: 'in_progress',
+              status: '진행 중',
             },
           ],
         }));
@@ -158,7 +155,7 @@ export const codeArtifact = new Artifact<'code', Metadata>({
                   {
                     id: runId,
                     contents: [{ type: 'text', value: message }],
-                    status: 'loading_packages',
+                    status: '패키지 로딩 중',
                   },
                 ],
               }));
@@ -210,31 +207,19 @@ export const codeArtifact = new Artifact<'code', Metadata>({
     },
     {
       icon: <UndoIcon size={18} />,
-      description: '이전 버전 보기',
+      description: '이전 버전',
       onClick: ({ handleVersionChange }) => {
         handleVersionChange('prev');
       },
-      isDisabled: ({ currentVersionIndex }) => {
-        if (currentVersionIndex === 0) {
-          return true;
-        }
-
-        return false;
-      },
+      isDisabled: ({ currentVersionIndex }) => currentVersionIndex === 0,
     },
     {
       icon: <RedoIcon size={18} />,
-      description: '다음 버전 보기',
+      description: '다음 버전',
       onClick: ({ handleVersionChange }) => {
         handleVersionChange('next');
       },
-      isDisabled: ({ isCurrentVersion }) => {
-        if (isCurrentVersion) {
-          return true;
-        }
-
-        return false;
-      },
+      isDisabled: ({ isCurrentVersion }) => isCurrentVersion,
     },
     {
       icon: <CopyIcon size={18} />,
@@ -253,10 +238,7 @@ export const codeArtifact = new Artifact<'code', Metadata>({
         sendMessage({
           role: 'user',
           parts: [
-            {
-              type: 'text',
-              text: 'Add comments to the code snippet for understanding',
-            },
+            { type: 'text', text: '코드 이해를 위한 댓글 추가' },
           ],
         });
       },
@@ -268,10 +250,7 @@ export const codeArtifact = new Artifact<'code', Metadata>({
         sendMessage({
           role: 'user',
           parts: [
-            {
-              type: 'text',
-              text: 'Add logs to the code snippet for debugging',
-            },
+            { type: 'text', text: '디버깅을 위한 로그 추가' },
           ],
         });
       },
