@@ -20,7 +20,7 @@ interface TextArtifactMetadata {
 
 export const textArtifact = new Artifact<'text', TextArtifactMetadata>({
   kind: 'text',
-  description: 'Useful for text content, like drafting essays and emails.',
+  description: '에세이, 이메일 작성 등 텍스트 작업에 유용합니다.',
   initialize: async ({ documentId, setMetadata }) => {
     const suggestions = await getSuggestions({ documentId });
 
@@ -48,7 +48,7 @@ export const textArtifact = new Artifact<'text', TextArtifactMetadata>({
             draftArtifact.content.length < 450
               ? true
               : draftArtifact.isVisible,
-          status: 'streaming',
+          status: '스트리밍 중',
         };
       });
     }
@@ -97,66 +97,48 @@ export const textArtifact = new Artifact<'text', TextArtifactMetadata>({
   actions: [
     {
       icon: <ClockRewind size={18} />,
-      description: 'View changes',
+      description: '변경 사항 보기',
       onClick: ({ handleVersionChange }) => {
         handleVersionChange('toggle');
       },
-      isDisabled: ({ currentVersionIndex, setMetadata }) => {
-        if (currentVersionIndex === 0) {
-          return true;
-        }
-
-        return false;
-      },
+      isDisabled: ({ currentVersionIndex }) => currentVersionIndex === 0,
     },
     {
       icon: <UndoIcon size={18} />,
-      description: 'View Previous version',
+      description: '이전 버전',
       onClick: ({ handleVersionChange }) => {
         handleVersionChange('prev');
       },
-      isDisabled: ({ currentVersionIndex }) => {
-        if (currentVersionIndex === 0) {
-          return true;
-        }
-
-        return false;
-      },
+      isDisabled: ({ currentVersionIndex }) => currentVersionIndex === 0,
     },
     {
       icon: <RedoIcon size={18} />,
-      description: 'View Next version',
+      description: '다음 버전',
       onClick: ({ handleVersionChange }) => {
         handleVersionChange('next');
       },
-      isDisabled: ({ isCurrentVersion }) => {
-        if (isCurrentVersion) {
-          return true;
-        }
-
-        return false;
-      },
+      isDisabled: ({ isCurrentVersion }) => isCurrentVersion,
     },
     {
       icon: <CopyIcon size={18} />,
-      description: 'Copy to clipboard',
+      description: '클립보드에 복사',
       onClick: ({ content }) => {
         navigator.clipboard.writeText(content);
-        toast.success('Copied to clipboard!');
+        toast.success('클립보드에 복사되었습니다!');
       },
     },
   ],
   toolbar: [
     {
       icon: <PenIcon />,
-      description: 'Add final polish',
+      description: '최종 다듬기',
       onClick: ({ sendMessage }) => {
         sendMessage({
           role: 'user',
           parts: [
             {
               type: 'text',
-              text: 'Please add final polish and check for grammar, add section titles for better structure, and ensure everything reads smoothly.',
+              text: '문법을 확인하고, 매끄럽게 읽히도록 최종 다듬어줘. 필요하다면 섹션 제목도 추가해줘.',
             },
           ],
         });
@@ -164,14 +146,14 @@ export const textArtifact = new Artifact<'text', TextArtifactMetadata>({
     },
     {
       icon: <MessageIcon />,
-      description: 'Request suggestions',
+      description: '개선 제안 요청',
       onClick: ({ sendMessage }) => {
         sendMessage({
           role: 'user',
           parts: [
             {
               type: 'text',
-              text: 'Please add suggestions you have that could improve the writing.',
+              text: '글을 더 좋게 만들 수 있는 제안을 해줘.',
             },
           ],
         });
