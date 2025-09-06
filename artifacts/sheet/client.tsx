@@ -22,7 +22,7 @@ export const sheetArtifact = new Artifact<'sheet', Metadata>({
         ...draftArtifact,
         content: streamPart.data,
         isVisible: true,
-        status: '스트리밍 중',
+        status: 'streaming', // ✅ 타입 호환성
       }));
     }
   },
