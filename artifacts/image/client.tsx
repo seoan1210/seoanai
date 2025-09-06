@@ -12,7 +12,7 @@ export const imageArtifact = new Artifact({
         ...draftArtifact,
         content: streamPart.data,
         isVisible: true,
-        status: '스트리밍 중',
+        status: 'streaming', // ✅ 타입에 맞게 영어로 수정
       }));
     }
   },
@@ -20,7 +20,7 @@ export const imageArtifact = new Artifact({
   actions: [
     {
       icon: <UndoIcon size={18} />,
-      description: '이전 버전',
+      description: '이전 버전 보기',
       onClick: ({ handleVersionChange }) => {
         handleVersionChange('prev');
       },
@@ -28,7 +28,7 @@ export const imageArtifact = new Artifact({
     },
     {
       icon: <RedoIcon size={18} />,
-      description: '다음 버전',
+      description: '다음 버전 보기',
       onClick: ({ handleVersionChange }) => {
         handleVersionChange('next');
       },
@@ -52,11 +52,10 @@ export const imageArtifact = new Artifact({
               navigator.clipboard.write([
                 new ClipboardItem({ 'image/png': blob }),
               ]);
+              toast.success('클립보드에 복사되었습니다');
             }
           }, 'image/png');
         };
-
-        toast.success('클립보드에 복사 되었습니다');
       },
     },
   ],
