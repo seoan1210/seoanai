@@ -2,7 +2,8 @@ import { Toaster } from 'sonner';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
-import PrivacyModal from '@/components/privacy-modal'; // 🔹 추가
+import PrivacyModal from '@/components/privacy-modal';
+import { Analytics } from '@vercel/analytics/react'; // 🔹 이 부분을 추가합니다.
 
 import './globals.css';
 import { SessionProvider } from 'next-auth/react';
@@ -14,7 +15,7 @@ export const metadata: Metadata = {
 };
 
 export const viewport = {
-  maximumScale: 1, // Disable auto-zoom on mobile Safari
+  maximumScale: 1,
 };
 
 const geist = Geist({
@@ -79,6 +80,7 @@ export default async function RootLayout({
             {/* 🔹 여기에서 PrivacyModal 실행 */}
             <PrivacyModal />
             {children}
+            <Analytics /> {/* 🔹 이 부분을 추가합니다. */}
           </SessionProvider>
         </ThemeProvider>
       </body>
