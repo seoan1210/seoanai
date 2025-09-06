@@ -56,7 +56,6 @@ export const imageArtifact = new Artifact({
     try {
       setArtifact((a: any) => ({ ...a, status: 'loading' }));
 
-      // Grok API 호출
       const res = await fetch('/api/grok-image', {
         method: 'POST',
         headers: { 'Content-Type': 'application/json' },
