@@ -5,14 +5,14 @@ import { toast } from 'sonner';
 
 export const imageArtifact = new Artifact({
   kind: 'image',
-  description: 'Useful for image generation',
+  description: '이미지 생성에 유용합니다',
   onStreamPart: ({ streamPart, setArtifact }) => {
     if (streamPart.type === 'data-imageDelta') {
       setArtifact((draftArtifact) => ({
         ...draftArtifact,
         content: streamPart.data,
         isVisible: true,
-        status: 'streaming',
+        status: '스트리밍 중',
       }));
     }
   },
@@ -20,31 +20,19 @@ export const imageArtifact = new Artifact({
   actions: [
     {
       icon: <UndoIcon size={18} />,
-      description: '이전 버전 보기',
+      description: '이전 버전',
       onClick: ({ handleVersionChange }) => {
         handleVersionChange('prev');
       },
-      isDisabled: ({ currentVersionIndex }) => {
-        if (currentVersionIndex === 0) {
-          return true;
-        }
-
-        return false;
-      },
+      isDisabled: ({ currentVersionIndex }) => currentVersionIndex === 0,
     },
     {
       icon: <RedoIcon size={18} />,
-      description: '다음 버전 보기',
+      description: '다음 버전',
       onClick: ({ handleVersionChange }) => {
         handleVersionChange('next');
       },
-      isDisabled: ({ isCurrentVersion }) => {
-        if (isCurrentVersion) {
-          return true;
-        }
-
-        return false;
-      },
+      isDisabled: ({ isCurrentVersion }) => isCurrentVersion,
     },
     {
       icon: <CopyIcon size={18} />,
