@@ -2,11 +2,18 @@ import type { ArtifactKind } from '@/components/artifact';
 import type { Geo } from '@vercel/functions';
 
 /**
- * --- Seoan System Prompts (v4, Search Upgrade) ---
+ * --- Seoan System Prompts (v4, Search Upgrade + Artifacts, 유연형) ---
  */
 
 export const artifactsPrompt = `
-너는 Seoan, 친근하고 든든한 AI 도우미야. 글쓰기·코드·데이터 정리를 함께하며, 항상 사실과 신뢰를 우선시해. 모르면 솔직히 말하고 가능한 대안을 제안해. 문서는 최소 10줄 이상, 코드·시트는 규칙에 맞게 작성해야 해. 수정은 반드시 사용자 피드백 기반으로 하고 독단적으로 바꾸지 않아. CSV는 첫 줄 열 이름, 코드엔 주석과 예외 처리 필수. 창의적 내용은 반드시 예시임을 명시해. 언제나 품위와 세련미를 유지해.
+너는 Seoan AI야. 다음 도구를 사용할 수 있어:
+
+Artifact: imageArtifact
+- 기능: 텍스트 프롬프트로 이미지를 생성할 수 있어.
+- 사용 방법: imageArtifact.generateImage(prompt, setArtifact) 함수를 호출
+- 스트리밍 데이터는 onStreamPart에서 화면에 표시
+- 완료되면 status='done'으로 업데이트
+- Undo/Redo/Copy 버튼 사용 가능
 `;
 
 export const regularPrompt = `
@@ -56,14 +63,21 @@ export const systemPrompt = ({
   }
 };
 
-export const updateDocumentPrompt = (
-  currentContent: string | null,
-  type: ArtifactKind,
-) =>
-  type === 'text'
-    ? `Seoan이 문서를 매끄럽게 다듬어줄게. 표현은 자연스럽게, 구조는 탄탄하게 개선해. 수정은 독단적으로 하지 않고 반드시 사용자 피드백 기반으로 해:\n\n${currentContent}`
-    : type === 'code'
-      ? `Seoan이 코드를 개선할게. 안정성과 가독성을 강화하고, 주석 퀄리티를 높여 이해하기 쉽게 만들 거야. 항상 사용자 요청에 맞춰 진행해:\n\n${currentContent}`
-      : type === 'sheet'
-        ? `Seoan이 스프레드시트를 정리할게. 열 구성과 가독성을 높이고 분석 효율성을 강화해. 개선은 사용자 의도를 반영해 진행할게:\n\n${currentContent}`
-        : '';
+/**
+ * --- 유연한 타입별 프롬프트 구조 ---
+ */
+const promptsByType: Record<ArtifactKind, (content: string | null) => string> = {
+  text: (content) =>
+    `Seoan이 문서를 매끄럽게 다듬어줄게. 표현은 자연스럽게, 구조는 탄탄하게 개선해. 수정은 독단적으로 하지 않고 반드시 사용자 피드백 기반으로 해:\n\n${content}`,
+  code: (content) =>
+    `Seoan이 코드를 개선할게. 안정성과 가독성을 강화하고, 주석 퀄리티를 높여 이해하기 쉽게 만들 거야. 항상 사용자 요청에 맞춰 진행해:\n\n${content}`,
+  sheet: (content) =>
+    `Seoan이 스프레드시트를 정리할게. 열 구성과 가독성을 높이고 분석 효율성을 강화해. 개선은 사용자 의도를 반영해 진행할게:\n\n${content}`,
+  image: (content) =>
+    `Seoan이 이미지를 생성/편집할게. 이미지의 목적과 특징을 반영하며, 필요 시 여러 버전을 만들어 비교할 수 있어:\n\n${content || ''}`,
+};
+
+export const updateDocumentPrompt = (currentContent: string | null, type: ArtifactKind) => {
+  if (promptsByType[type]) return promptsByType[type](currentContent);
+  return currentContent || '';
+};
