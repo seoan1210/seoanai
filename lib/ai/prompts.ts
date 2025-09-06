@@ -52,7 +52,7 @@ export const systemPrompt = ({
 };
 
 /**
- * 유연형 타입별 프롬프트
+ * 타입별 유연형 프롬프트
  */
 const promptsByType: Record<ArtifactKind, (content: string | null) => string> = {
   text: (content) =>
@@ -64,6 +64,10 @@ const promptsByType: Record<ArtifactKind, (content: string | null) => string> = 
   image: (content) =>
     `Seoan이 이미지를 생성/편집할게. 이미지의 목적과 특징을 반영하며, 필요 시 여러 버전을 만들어 비교할 수 있어:\n\n${content || ''}`,
 };
+
+// 별도 export: 이전 import 오류 대응
+export const codePrompt = promptsByType.code;
+export const sheetPrompt = promptsByType.sheet;
 
 export const updateDocumentPrompt = (currentContent: string | null, type: ArtifactKind) => {
   if (promptsByType[type]) return promptsByType[type](currentContent);
