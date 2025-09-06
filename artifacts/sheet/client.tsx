@@ -14,7 +14,7 @@ type Metadata = any;
 
 export const sheetArtifact = new Artifact<'sheet', Metadata>({
   kind: 'sheet',
-  description: 'Useful for working with spreadsheets',
+  description: '스프레드시트 작업에 유용합니다',
   initialize: async () => {},
   onStreamPart: ({ setArtifact, streamPart }) => {
     if (streamPart.type === 'data-sheetDelta') {
@@ -22,7 +22,7 @@ export const sheetArtifact = new Artifact<'sheet', Metadata>({
         ...draftArtifact,
         content: streamPart.data,
         isVisible: true,
-        status: 'streaming',
+        status: '스트리밍 중',
       }));
     }
   },
@@ -46,31 +46,19 @@ export const sheetArtifact = new Artifact<'sheet', Metadata>({
   actions: [
     {
       icon: <UndoIcon size={18} />,
-      description: '이전 버전 보기',
+      description: '이전 버전',
       onClick: ({ handleVersionChange }) => {
         handleVersionChange('prev');
       },
-      isDisabled: ({ currentVersionIndex }) => {
-        if (currentVersionIndex === 0) {
-          return true;
-        }
-
-        return false;
-      },
+      isDisabled: ({ currentVersionIndex }) => currentVersionIndex === 0,
     },
     {
       icon: <RedoIcon size={18} />,
-      description: '다음 버전 보기',
+      description: '다음 버전',
       onClick: ({ handleVersionChange }) => {
         handleVersionChange('next');
       },
-      isDisabled: ({ isCurrentVersion }) => {
-        if (isCurrentVersion) {
-          return true;
-        }
-
-        return false;
-      },
+      isDisabled: ({ isCurrentVersion }) => isCurrentVersion,
     },
     {
       icon: <CopyIcon />,
@@ -85,25 +73,25 @@ export const sheetArtifact = new Artifact<'sheet', Metadata>({
         const cleanedCsv = unparse(nonEmptyRows);
 
         navigator.clipboard.writeText(cleanedCsv);
-        toast.success('클립보드에 복사');
+        toast.success('클립보드에 복사되었습니다');
       },
     },
   ],
   toolbar: [
     {
-      description: 'Format and clean data',
+      description: '데이터 정리 및 포맷',
       icon: <SparklesIcon />,
       onClick: ({ sendMessage }) => {
         sendMessage({
           role: 'user',
           parts: [
-            { type: 'text', text: 'Can you please format and clean the data?' },
+            { type: 'text', text: '데이터를 정리하고 보기 좋게 포맷해줘.' },
           ],
         });
       },
     },
     {
-      description: 'Analyze and visualize data',
+      description: '데이터 분석 및 시각화',
       icon: <LineChartIcon />,
       onClick: ({ sendMessage }) => {
         sendMessage({
@@ -111,7 +99,7 @@ export const sheetArtifact = new Artifact<'sheet', Metadata>({
           parts: [
             {
               type: 'text',
-              text: 'Can you please analyze and visualize the data by creating a new code artifact in python?',
+              text: '데이터를 분석하고 파이썬 코드 아티팩트로 시각화를 만들어줘.',
             },
           ],
         });
