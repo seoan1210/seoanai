@@ -1,0 +1,52 @@
+# Seoan AI Chatbot
+
+## 개요
+
+Seoan AI Chatbot은 Next.js와 Grok 기반으로 개발된 한국어 최적화 AI 챗봇 프로젝트입니다. 단순한 대화 기능을 넘어 글쓰기, 코드 작성, 문서 편집 등 다양한 생산성 작업을 지원합니다. 사용자는 직관적인 대화형 인터페이스를 통해 원하는 작업을 자연스럽게 요청할 수 있으며, Grok 모델이 맥락을 이해하고 이에 맞는 답변을 제공합니다. 이 챗봇은 학습, 업무, 개인 프로젝트 등 여러 상황에서 효율성을 높이고자 설계되었습니다.
+
+## 주요 기능
+
+* **대화형 인터페이스**: 자연스럽고 실시간적인 AI 상호작용 제공
+* **Artifacts 모드**: 코드, 문서, 스프레드시트를 대화와 함께 확인 및 편집 가능
+* **개인정보 이용 동의 팝업**: 첫 접속 시 개인정보 보호를 위한 동의 절차 제공
+* **사용자 인증**: NextAuth 기반의 로그인 및 세션 관리 기능
+* **토스트 알림**: 작업 성공, 실패 등 즉각적인 피드백 제공
+
+## 기술 스택
+
+* **Frontend**: Next.js (App Router)
+* **Authentication**: NextAuth.js
+* **UI**: TailwindCSS, shadcn/ui, lucide-react
+* **AI 연동**: Grok API
+
+## 설치 및 실행
+
+1. 프로젝트 클론: `git clone https://github.com/username/repo-name.git`
+2. 디렉토리 이동: `cd repo-name`
+3. 의존성 설치: `npm install`
+4. 개발 서버 실행: `npm run dev`
+5. 프로덕션 빌드 및 실행: `npm run build && npm start`
+
+## 환경 변수
+
+`.env.local` 파일에 다음 값을 설정해야 합니다.
+
+* `GROK_API_KEY`: Grok API 키
+* `NEXTAUTH_SECRET`: NextAuth 암호화 키
+* `NEXTAUTH_URL`: 애플리케이션 기본 URL
+
+## 프로젝트 구조
+
+* `components/`: UI 컴포넌트 (AuthForm, Toast, Popup 등)
+* `app/`: Next.js App Router 기반 페이지
+* `lib/`: 유틸 함수 및 API 연동 로직
+
+## 향후 계획
+
+* 사용자 대화 기록 저장 및 검색 기능 강화
+* Grok 최신 버전 연동 및 성능 개선
+* 한국어 환경 최적화 지속 및 UX 고도화
+
+## 라이선스
+
+MIT License
