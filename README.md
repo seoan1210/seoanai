@@ -54,3 +54,16 @@ Seoan AI Chatbot은 Next.js와 Grok 기반으로 개발된 한국어 최적화 A
 
 MIT License
 
+
+
+## 배포 방법
+1. 프로젝트 다운로드
+2. vercel.com 접속
+3. 로그인 / 회원가입
+4. 프로젝트 만들기 깃허브 임포트 하기
+5. AUTH_SECRET 환경변수 만들기 => 베포
+6. GROQ, XAI, neon, blob 프로젝트 연결 ( Vercel Marketplace 에서 찾기)
+7. 베포
+8. 완료
+
+
