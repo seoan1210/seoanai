@@ -69,7 +69,7 @@ export const Suggestion = ({
             className="w-fit rounded-full px-3 py-1.5"
             onClick={onApply}
           >
-            Apply
+            적용
           </Button>
         </motion.div>
       )}
