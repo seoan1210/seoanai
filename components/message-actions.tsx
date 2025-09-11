@@ -36,29 +36,29 @@ export function PureMessageActions({
 
   const handleCopy = async () => {
     if (!textFromParts) {
-      toast.error("There's no text to copy!");
+      toast.error('복사할 내용이 없어요!');
       return;
     }
 
     await copyToClipboard(textFromParts);
-    toast.success('Copied to clipboard!');
+    toast.success('클립보드에 복사했어요!');
   };
 
-  // User messages get edit (on hover) and copy actions
+  // 사용자 메시지는 수정(호버 시) 및 복사 버튼이 보입니다.
   if (message.role === 'user') {
     return (
       <Actions className="-mr-0.5 justify-end">
         <div className="relative">
           {setMode && (
             <Action
-              tooltip="Edit"
+              tooltip="수정"
               onClick={() => setMode('edit')}
               className="-left-10 absolute top-0 opacity-0 transition-opacity group-hover/message:opacity-100"
             >
               <PencilEditIcon />
             </Action>
           )}
-          <Action tooltip="Copy" onClick={handleCopy}>
+          <Action tooltip="복사" onClick={handleCopy}>
             <CopyIcon />
           </Action>
         </div>
@@ -68,12 +68,12 @@ export function PureMessageActions({
 
   return (
     <Actions className="-ml-0.5">
-      <Action tooltip="Copy" onClick={handleCopy}>
+      <Action tooltip="복사" onClick={handleCopy}>
         <CopyIcon />
       </Action>
 
       <Action
-        tooltip="Upvote Response"
+        tooltip="응답에 좋아요"
         data-testid="message-upvote"
         disabled={vote?.isUpvoted}
         onClick={async () => {
@@ -87,7 +87,7 @@ export function PureMessageActions({
           });
 
           toast.promise(upvote, {
-            loading: 'Upvoting Response...',
+            loading: '응답에 좋아요 누르는 중...',
             success: () => {
               mutate<Array<Vote>>(
                 `/api/vote?chatId=${chatId}`,
@@ -110,9 +110,9 @@ export function PureMessageActions({
                 { revalidate: false },
               );
 
-              return 'Upvoted Response!';
+              return '응답에 좋아요를 눌렀어요!';
             },
-            error: 'Failed to upvote response.',
+            error: '응답에 좋아요를 누르는 데 실패했어요.',
           });
         }}
       >
@@ -120,7 +120,7 @@ export function PureMessageActions({
       </Action>
 
       <Action
-        tooltip="Downvote Response"
+        tooltip="응답에 싫어요"
         data-testid="message-downvote"
         disabled={vote && !vote.isUpvoted}
         onClick={async () => {
@@ -134,7 +134,7 @@ export function PureMessageActions({
           });
 
           toast.promise(downvote, {
-            loading: 'Downvoting Response...',
+            loading: '응답에 싫어요 누르는 중...',
             success: () => {
               mutate<Array<Vote>>(
                 `/api/vote?chatId=${chatId}`,
@@ -157,9 +157,9 @@ export function PureMessageActions({
                 { revalidate: false },
               );
 
-              return 'Downvoted Response!';
+              return '응답에 싫어요를 눌렀어요.';
             },
-            error: 'Failed to downvote response.',
+            error: '응답에 싫어요를 누르는 데 실패했어요.',
           });
         }}
       >
