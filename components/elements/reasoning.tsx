@@ -24,7 +24,7 @@ const ReasoningContext = createContext<ReasoningContextValue | null>(null);
 const useReasoning = () => {
   const context = useContext(ReasoningContext);
   if (!context) {
-    throw new Error('Reasoning components must be used within Reasoning');
+    throw new Error('Reasoning 컴포넌트는 Reasoning 내부에서 사용되어야 합니다.');
   }
   return context;
 };
@@ -64,7 +64,7 @@ export const Reasoning = memo(
     const [hasAutoClosedRef, setHasAutoClosedRef] = useState(false);
     const [startTime, setStartTime] = useState<number | null>(null);
 
-    // Track duration when streaming starts and ends
+    // 스트리밍 시작 및 종료 시점의 지속 시간 추적
     useEffect(() => {
       if (isStreaming) {
         if (startTime === null) {
@@ -76,10 +76,10 @@ export const Reasoning = memo(
       }
     }, [isStreaming, startTime, setDuration]);
 
-    // Auto-open when streaming starts, auto-close when streaming ends (once only)
+    // 스트리밍 시작 시 자동 열기, 스트리밍 종료 시 자동 닫기 (한 번만)
     useEffect(() => {
       if (defaultOpen && !isStreaming && isOpen && !hasAutoClosedRef) {
-        // Add a small delay before closing to allow user to see the content
+        // 사용자가 내용을 볼 수 있도록 약간의 딜레이를 추가
         const timer = setTimeout(() => {
           setIsOpen(false);
           setHasAutoClosedRef(true);
@@ -128,9 +128,9 @@ export const ReasoningTrigger = memo(
           <>
             <BrainIcon className="size-4" />
             {isStreaming || duration === 0 ? (
-              <p>Thinking...</p>
+              <p>생각 중...</p>
             ) : (
-              <p>Thought for {duration}s</p>
+              <p>생각한 시간: {duration}초</p>
             )}
             <ChevronDownIcon
               className={cn(
