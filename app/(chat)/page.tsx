@@ -49,7 +49,7 @@ export default async function Page() {
             이용약관
           </Link>
           <span>|</span>
-          <span>2024 ~ &copy; {new Date().getFullYear()} Seoan AI</span>
+          <span>&copy; 2024 ~ {new Date().getFullYear()} Seoan AI</span>
         </div>
       </footer>
 
