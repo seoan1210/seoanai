@@ -2,18 +2,19 @@ import { Toaster } from 'sonner';
 import type { Metadata } from 'next';
 import { Geist, Geist_Mono } from 'next/font/google';
 import { ThemeProvider } from '@/components/theme-provider';
+import PrivacyModal from '@/components/privacy-modal';
+import { SessionProvider } from 'next-auth/react';
 
 import './globals.css';
-import { SessionProvider } from 'next-auth/react';
 
 export const metadata: Metadata = {
   metadataBase: new URL('https://seoanai.vercel.app'),
   title: 'Seoan AI',
-  description: 'Welcome to Seoan AI',
+  description: 'Welcome to Seoan AI.',
 };
 
 export const viewport = {
-  maximumScale: 1, // Disable auto-zoom on mobile Safari
+  maximumScale: 1,
 };
 
 const geist = Geist({
@@ -55,11 +56,7 @@ export default async function RootLayout({
 }>) {
   return (
     <html
-      lang="en"
-      // `next-themes` injects an extra classname to the body element to avoid
-      // visual flicker before hydration. Hence the `suppressHydrationWarning`
-      // prop is necessary to avoid the React hydration mismatch warning.
-      // https://github.com/pacocoursey/next-themes?tab=readme-ov-file#with-app
+      lang="ko"
       suppressHydrationWarning
       className={`${geist.variable} ${geistMono.variable}`}
     >
@@ -78,7 +75,10 @@ export default async function RootLayout({
           disableTransitionOnChange
         >
           <Toaster position="top-center" />
-          <SessionProvider>{children}</SessionProvider>
+          <SessionProvider>
+            <PrivacyModal />
+            {children}
+          </SessionProvider>
         </ThemeProvider>
       </body>
     </html>
