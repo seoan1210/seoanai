@@ -19,37 +19,39 @@ export default async function Page() {
   const cookieStore = await cookies();
   const modelIdFromCookie = cookieStore.get('chat-model');
 
-  if (!modelIdFromCookie) {
-    return (
-      <>
-        <Chat
-          key={id}
-          id={id}
-          initialMessages={[]}
-          initialChatModel={DEFAULT_CHAT_MODEL}
-          initialVisibilityType="private"
-          isReadonly={false}
-          session={session}
-          autoResume={false}
-        />
-        <DataStreamHandler />
-      </>
-    );
-  }
+  const initialModel = modelIdFromCookie
+    ? modelIdFromCookie.value
+    : DEFAULT_CHAT_MODEL;
 
   return (
-    <>
+    <div className="flex flex-col h-screen">
+      {/* 채팅 영역 (메시지 + 입력창 포함) */}
       <Chat
         key={id}
         id={id}
         initialMessages={[]}
-        initialChatModel={modelIdFromCookie.value}
+        initialChatModel={initialModel}
         initialVisibilityType="private"
         isReadonly={false}
         session={session}
         autoResume={false}
       />
+
+      <footer className="w-full text-center mt-1 text-gray-500 text-xs">
+        <div className="flex justify-center space-x-2">
+          <Link href="/privacy-policy" className="hover:underline">
+            개인정보 처리방침
+          </Link>
+          <span>|</span>
+          <Link href="/terms-of-service" className="hover:underline">
+            이용약관
+          </Link>
+          <span>|</span>
+          <span>2024 ~ &copy; {new Date().getFullYear()} Seoan AI</span>
+        </div>
+      </footer>
+
       <DataStreamHandler />
-    </>
+    </div>
   );
 }
