@@ -43,9 +43,9 @@ export const VersionFooter = ({
       transition={{ type: 'spring', stiffness: 140, damping: 20 }}
     >
       <div>
-        <div>You are viewing a previous version</div>
+        <div>이전 버전을 보고 있습니다</div>
         <div className="text-muted-foreground text-sm">
-          Restore this version to make edits
+          수정하려면 이 버전을 복원하세요
         </div>
       </div>
 
@@ -86,7 +86,7 @@ export const VersionFooter = ({
             );
           }}
         >
-          <div>Restore this version</div>
+          <div>이 버전 복원</div>
           {isMutating && (
             <div className="animate-spin">
               <LoaderIcon />
@@ -99,7 +99,7 @@ export const VersionFooter = ({
             handleVersionChange('latest');
           }}
         >
-          Back to latest version
+          최신 버전으로 돌아가기
         </Button>
       </div>
     </motion.div>
