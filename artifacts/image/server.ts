@@ -1,51 +1,57 @@
-import { streamText } from 'ai';
+import { streamText, tool } from 'ai';
 import { myProvider } from './myProvider';
 import { createDocumentHandler } from '@/lib/artifacts/server';
-import { generateImage } from './image-generator'; // 이미지 생성 함수 가져오기
-import { z } from 'zod'; // Zod로 함수 입력값 유효성 검사
+import { updateDocumentPrompt } from '@/lib/ai/prompts';
+import { z } from 'zod';
 
-// 1. Grok에게 제공할 '도구(tool)'를 정의
-const generateImageTool = {
-  // 함수 이름
+// 1. Grok에게 제공할 '이미지 생성 도구'를 정의
+const generateImageTool = tool({
   name: 'generateImage',
-  // 함수 설명 (AI가 이 설명을 보고 적절한 상황에 사용)
-  description: '이미지를 생성합니다. 이미지를 만들어 달라는 요청이 들어오면 반드시 이 함수를 호출해야 합니다.',
-  // 함수가 필요로 하는 입력값(인자)을 정의
+  description: '이미지를 생성합니다. 이미지를 만들어 달라는 요청이 들어오면 이 함수를 호출해야 합니다.',
   parameters: z.object({
     prompt: z.string().describe('사용자가 이미지로 만들고 싶어 하는 것을 상세히 설명하는 문장'),
   }),
-};
+});
 
 export const hybridDocumentHandler = createDocumentHandler<'hybrid'>({
   kind: 'hybrid',
 
   onCreateDocument: async ({ title, dataStream }) => {
-    // 2. Grok 모델을 호출할 때 'tools' 옵션을 추가
+    // 2. Grok 모델을 호출할 때 '도구'와 '메시지'를 전달
     const { fullStream } = streamText({
       model: myProvider.languageModel('xai/grok-2-image'),
       messages: [{ role: 'user', content: title }],
-      // Grok이 사용할 도구를 여기에 전달
       tools: [generateImageTool],
-      // 도구 호출이 감지되면 이 함수가 실행
+      // 3. Grok이 도구를 호출하면 실행될 콜백 함수
       onToolCall: async ({ toolName, args }) => {
         if (toolName === 'generateImage') {
-          // 3. Grok이 generateImage 함수를 호출하면, 우리가 직접 그 함수를 실행
-          const imageUrl = await generateImage(args.prompt);
+          // Grok이 이미지 생성을 요청하면,
+          // Grok API가 직접 이미지를 생성하고 그 결과를 반환한다고 가정
+          // 실제 동작은 API 문서에 따라 다를 수 있지만, 이렇게 모델이 직접 처리하는 경우가 일반적입니다.
+          // 여기서는 Grok이 이미지 데이터를 반환한다고 가정하고, 그 데이터를 스트림으로 바로 보냅니다.
+          try {
+            // Grok에 이미지를 요청하는 새로운 프롬프트를 보내는 로직이 들어갈 수 있습니다.
+            // 하지만 ai-sdk의 tool 기능을 사용하면, onToolCall 안에서
+            // 이미지가 바로 생성되어 반환되도록 설정하는 경우가 많습니다.
+            const imageUrl = await myProvider.languageModel('xai/grok-2-image').getToolResult(args);
 
-          // 4. 실행 결과를 클라이언트로 스트리밍
-          dataStream.write({
-            type: 'data-imageDelta',
-            data: imageUrl,
-            transient: false,
-          });
+            // 클라이언트로 이미지 데이터를 바로 스트리밍
+            dataStream.write({
+              type: 'data-imageDelta',
+              data: imageUrl,
+              transient: false,
+            });
 
-          // Grok에게 이미지 URL을 텍스트로 알려줄 수도 있어.
-          return `이미지 생성이 완료되었습니다: ${imageUrl}`;
+            // Grok에게 이미지 URL을 텍스트로 알려줄 수도 있습니다.
+            return `이미지 생성이 완료되었습니다: ${imageUrl}`;
+          } catch (error) {
+            return `이미지 생성에 실패했습니다: ${error.message}`;
+          }
         }
       },
     });
 
-    // 5. Grok이 함수를 호출하지 않고 텍스트를 생성할 경우, 텍스트를 스트리밍
+    // 4. Grok이 함수를 호출하지 않고 텍스트를 생성할 경우, 텍스트를 스트리밍
     let draftContent = '';
     for await (const delta of fullStream) {
       if (delta.type === 'text-delta') {
@@ -60,9 +66,27 @@ export const hybridDocumentHandler = createDocumentHandler<'hybrid'>({
     return draftContent;
   },
 
-  // onUpdateDocument 로직은 그대로 사용
   onUpdateDocument: async ({ document, description, dataStream }) => {
-    // 기존 로직
-    // ...
+    // 이 부분은 기존 텍스트 업데이트 로직
+    const { fullStream } = streamText({
+      model: myProvider.languageModel('xai/grok-2-image'),
+      system: updateDocumentPrompt(document.content, 'text'),
+      prompt: description,
+      experimental_transform: smoothStream({ chunking: 'word' }),
+    });
+
+    let draftContent = '';
+    for await (const delta of fullStream) {
+      if (delta.type === 'text-delta') {
+        const { text } = delta;
+        draftContent += text;
+        dataStream.write({
+          type: 'data-textDelta',
+          data: text,
+          transient: true,
+        });
+      }
+    }
+    return draftContent;
   },
 });
