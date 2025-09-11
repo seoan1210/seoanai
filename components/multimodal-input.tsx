@@ -104,12 +104,10 @@ function PureMultimodalInput({
   useEffect(() => {
     if (textareaRef.current) {
       const domValue = textareaRef.current.value;
-      // Prefer DOM value over localStorage to handle hydration
       const finalValue = domValue || localStorageInput || '';
       setInput(finalValue);
       adjustHeight();
     }
-    // Only run once after hydration
     // eslint-disable-next-line react-hooks/exhaustive-deps
   }, []);
 
@@ -185,7 +183,7 @@ function PureMultimodalInput({
       const { error } = await response.json();
       toast.error(error);
     } catch (error) {
-      toast.error('Failed to upload file, please try again!');
+      toast.error('파일 업로드에 실패했습니다. 다시 시도해주세요!');
     }
   };
 
@@ -194,14 +192,12 @@ function PureMultimodalInput({
   }, [selectedModelId]);
 
   const contextMax = useMemo(() => {
-    // Resolve from selected model; stable across chunks.
     const cw = getContextWindow(modelResolver.modelId);
     return cw.combinedMax ?? cw.inputMax ?? 0;
   }, [modelResolver]);
 
   const usedTokens = useMemo(() => {
-    // Prefer explicit usage data part captured via onData
-    if (!usage) return 0; // update only when final usage arrives
+    if (!usage) return 0;
     const n = normalizeUsage(usage);
     return typeof n.total === 'number'
       ? n.total
@@ -236,7 +232,7 @@ function PureMultimodalInput({
           ...successfullyUploadedAttachments,
         ]);
       } catch (error) {
-        console.error('Error uploading files!', error);
+        console.error('파일 업로드 중 오류 발생!', error);
       } finally {
         setUploadQueue([]);
       }
@@ -303,7 +299,7 @@ function PureMultimodalInput({
         onSubmit={(event) => {
           event.preventDefault();
           if (status !== 'ready') {
-            toast.error('Please wait for the model to finish its response!');
+            toast.error('모델 응답이 끝날 때까지 기다려주세요!');
           } else {
             submitForm();
           }
@@ -346,7 +342,7 @@ function PureMultimodalInput({
           <PromptInputTextarea
             data-testid="multimodal-input"
             ref={textareaRef}
-            placeholder="Send a message..."
+            placeholder="메시지를 입력하세요..."
             value={input}
             onChange={handleInput}
             minHeight={44}
@@ -384,124 +380,3 @@ function PureMultimodalInput({
     </div>
   );
 }
-
-export const MultimodalInput = memo(
-  PureMultimodalInput,
-  (prevProps, nextProps) => {
-    if (prevProps.input !== nextProps.input) return false;
-    if (prevProps.status !== nextProps.status) return false;
-    if (!equal(prevProps.attachments, nextProps.attachments)) return false;
-    if (prevProps.selectedVisibilityType !== nextProps.selectedVisibilityType)
-      return false;
-    if (prevProps.selectedModelId !== nextProps.selectedModelId) return false;
-
-    return true;
-  },
-);
-
-function PureAttachmentsButton({
-  fileInputRef,
-  status,
-  selectedModelId,
-}: {
-  fileInputRef: React.MutableRefObject<HTMLInputElement | null>;
-  status: UseChatHelpers<ChatMessage>['status'];
-  selectedModelId: string;
-}) {
-  const isReasoningModel = selectedModelId === 'chat-model-reasoning';
-
-  return (
-    <Button
-      data-testid="attachments-button"
-      className='p-1 h-8 rounded-lg transition-colors aspect-square hover:bg-accent'
-      onClick={(event) => {
-        event.preventDefault();
-        fileInputRef.current?.click();
-      }}
-      disabled={status !== 'ready' || isReasoningModel}
-      variant="ghost"
-    >
-      <PaperclipIcon size={14} style={{ width: 14, height: 14 }} />
-    </Button>
-  );
-}
-
-const AttachmentsButton = memo(PureAttachmentsButton);
-
-function PureModelSelectorCompact({
-  selectedModelId,
-}: {
-  selectedModelId: string;
-}) {
-  const [optimisticModelId, setOptimisticModelId] = useState(selectedModelId);
-
-  const selectedModel = chatModels.find(
-    (model) => model.id === optimisticModelId,
-  );
-
-  return (
-    <PromptInputModelSelect
-      value={selectedModel?.name}
-      onValueChange={(modelName) => {
-        const model = chatModels.find((m) => m.name === modelName);
-        if (model) {
-          setOptimisticModelId(model.id);
-          startTransition(() => {
-            saveChatModelAsCookie(model.id);
-          });
-        }
-      }}
-    >
-      <SelectPrimitive.Trigger
-        type="button"
-        className='flex gap-2 items-center px-2 h-8 rounded-lg border-0 shadow-none transition-colors bg-background text-foreground hover:bg-accent focus:outline-none focus:ring-0 focus-visible:ring-0 focus-visible:ring-offset-0'
-      >
-        <CpuIcon size={16} />
-        <span className="hidden text-xs font-medium sm:block">{selectedModel?.name}</span>
-        <ChevronDownIcon size={16} />
-      </SelectPrimitive.Trigger>
-      <PromptInputModelSelectContent className="min-w-[260px] p-0">
-        <div className="flex flex-col gap-px">
-        {chatModels.map((model) => (
-          <SelectItem key={model.id} value={model.name} className="px-3 py-2 text-xs">
-            <div className="flex flex-col flex-1 gap-1 min-w-0">
-              <div className="text-xs font-medium truncate">
-                {model.name}
-              </div>
-              <div className="text-[10px] text-muted-foreground truncate leading-tight">
-                {model.description}
-              </div>
-            </div>
-          </SelectItem>
-        ))}
-        </div>
-      </PromptInputModelSelectContent>
-    </PromptInputModelSelect>
-  );
-}
-
-const ModelSelectorCompact = memo(PureModelSelectorCompact);
-
-function PureStopButton({
-  stop,
-  setMessages,
-}: {
-  stop: () => void;
-  setMessages: UseChatHelpers<ChatMessage>['setMessages'];
-}) {
-  return (
-    <Button
-      data-testid="stop-button"
-      className="p-1 rounded-full transition-colors duration-200 size-7 bg-foreground text-background hover:bg-foreground/90 disabled:bg-muted disabled:text-muted-foreground"
-      onClick={(event) => {
-        event.preventDefault();
-        stop();
-        setMessages((messages) => messages);
-      }}
-    >
-      <StopIcon size={14} />
-    </Button>
-  );
-}
-
-const StopButton = memo(PureStopButton);
