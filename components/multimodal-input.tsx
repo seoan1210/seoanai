@@ -185,7 +185,7 @@ function PureMultimodalInput({
       const { error } = await response.json();
       toast.error(error);
     } catch (error) {
-      toast.error('Failed to upload file, please try again!');
+      toast.error('파일 업로드에 실패했습니다. 다시 시도해주세요!');
     }
   };
 
@@ -236,7 +236,7 @@ function PureMultimodalInput({
           ...successfullyUploadedAttachments,
         ]);
       } catch (error) {
-        console.error('Error uploading files!', error);
+        console.error('파일 업로드 오류!', error);
       } finally {
         setUploadQueue([]);
       }
@@ -303,7 +303,7 @@ function PureMultimodalInput({
         onSubmit={(event) => {
           event.preventDefault();
           if (status !== 'ready') {
-            toast.error('Please wait for the model to finish its response!');
+            toast.error('모델의 응답이 끝날 때까지 기다려 주세요!');
           } else {
             submitForm();
           }
@@ -346,7 +346,7 @@ function PureMultimodalInput({
           <PromptInputTextarea
             data-testid="multimodal-input"
             ref={textareaRef}
-            placeholder="Send a message..."
+            placeholder="메시지를 입력하세요..."
             value={input}
             onChange={handleInput}
             minHeight={44}
