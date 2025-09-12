@@ -1,70 +1,77 @@
-<a href="https://chat.vercel.ai/">
-  <img alt="Next.js 14 and App Router-ready AI chatbot." src="app/(chat)/opengraph-image.png">
-  <h1 align="center">Chat SDK</h1>
+<a href="https://seoanai.vercel.app/">
+  <img alt="Seoan AI" src="app/favicon.ico">
+  <h1 align="center">2024 ~ 2025</h1>
 </a>
 
-<p align="center">
-    Chat SDK is a free, open-source template built with Next.js and the AI SDK that helps you quickly build powerful chatbot applications.
-</p>
 
-<p align="center">
-  <a href="https://chat-sdk.dev"><strong>Read Docs</strong></a> ·
-  <a href="#features"><strong>Features</strong></a> ·
-  <a href="#model-providers"><strong>Model Providers</strong></a> ·
-  <a href="#deploy-your-own"><strong>Deploy Your Own</strong></a> ·
-  <a href="#running-locally"><strong>Running locally</strong></a>
-</p>
-<br/>
+# Seoan AI Chatbot
 
-## Features
+## 프로젝트 개요
 
-- [Next.js](https://nextjs.org) App Router
-  - Advanced routing for seamless navigation and performance
-  - React Server Components (RSCs) and Server Actions for server-side rendering and increased performance
-- [AI SDK](https://ai-sdk.dev/docs/introduction)
-  - Unified API for generating text, structured objects, and tool calls with LLMs
-  - Hooks for building dynamic chat and generative user interfaces
-  - Supports xAI (default), OpenAI, Fireworks, and other model providers
-- [shadcn/ui](https://ui.shadcn.com)
-  - Styling with [Tailwind CSS](https://tailwindcss.com)
-  - Component primitives from [Radix UI](https://radix-ui.com) for accessibility and flexibility
-- Data Persistence
-  - [Neon Serverless Postgres](https://vercel.com/marketplace/neon) for saving chat history and user data
-  - [Vercel Blob](https://vercel.com/storage/blob) for efficient file storage
-- [Auth.js](https://authjs.dev)
-  - Simple and secure authentication
+Seoan AI Chatbot은 Next.js와 Grok 기반으로 개발된 한국어 최적화 AI 챗봇 프로젝트입니다. 사용자는 대화형 인터페이스를 통해 글쓰기, 코드 작성, 문서 편집 등 다양한 작업을 지원하며, 업무와 학습을 돕는 지능형 도구로 설계되었습니다.
 
-## Model Providers
+## 주요 기능
 
-This template uses the [Vercel AI Gateway](https://vercel.com/docs/ai-gateway) to access multiple AI models through a unified interface. The default configuration includes [xAI](https://x.ai) models (`grok-2-vision-1212`, `grok-3-mini`) routed through the gateway.
+* **대화형 인터페이스**: 자연스럽고 실시간적인 AI 상호작용 제공
+* **Artifacts 모드**: 코드, 문서, 스프레드시트를 대화와 함께 확인 및 편집 가능
+* **개인정보 이용 동의 팝업**: 첫 접속 시 개인정보 보호를 위한 동의 절차 제공
+* **사용자 인증**: NextAuth 기반의 로그인 및 세션 관리 기능
+* **토스트 알림**: 작업 성공, 실패 등 즉각적인 피드백 제공
 
-### AI Gateway Authentication
+## 기술 스택
 
-**For Vercel deployments**: Authentication is handled automatically via OIDC tokens.
+* **Frontend**: Next.js (App Router)
+* **Authentication**: NextAuth.js
+* **UI**: TailwindCSS, shadcn/ui, lucide-react
+* **AI 연동**: Grok API
 
-**For non-Vercel deployments**: You need to provide an AI Gateway API key by setting the `AI_GATEWAY_API_KEY` environment variable in your `.env.local` file.
+## 설치 및 실행
 
-With the [AI SDK](https://ai-sdk.dev/docs/introduction), you can also switch to direct LLM providers like [OpenAI](https://openai.com), [Anthropic](https://anthropic.com), [Cohere](https://cohere.com/), and [many more](https://ai-sdk.dev/providers/ai-sdk-providers) with just a few lines of code.
+1. 프로젝트 클론: `git clone https://github.com/seoan1210/seoanai.git`
+2. 디렉토리 이동: `cd seoanai`
+3. 의존성 설치: `npm install`
+4. 개발 서버 실행: `npm run dev`
+5. 프로덕션 빌드 및 실행: `npm run build && npm start`
 
-## Deploy Your Own
+## 환경 변수
 
-You can deploy your own version of the Next.js AI Chatbot to Vercel with one click:
+`.env.local` 파일에 다음 값을 설정해야 합니다.
 
-[![Deploy with Vercel](https://vercel.com/button)](https://vercel.com/new/clone?repository-url=https%3A%2F%2Fgithub.com%2Fvercel%2Fai-chatbot&env=AUTH_SECRET&envDescription=Generate%20a%20random%20secret%20to%20use%20for%20authentication&envLink=https%3A%2F%2Fgenerate-secret.vercel.app%2F32&project-name=my-awesome-chatbot&repository-name=my-awesome-chatbot&demo-title=AI%20Chatbot&demo-description=An%20Open-Source%20AI%20Chatbot%20Template%20Built%20With%20Next.js%20and%20the%20AI%20SDK%20by%20Vercel&demo-url=https%3A%2F%2Fchat.vercel.ai&products=%5B%7B%22type%22%3A%22integration%22%2C%22protocol%22%3A%22storage%22%2C%22productSlug%22%3A%22neon%22%2C%22integrationSlug%22%3A%22neon%22%7D%2C%7B%22type%22%3A%22blob%22%7D%5D)
+* `GROK_API_KEY`: Grok API 키
+* `NEXTAUTH_SECRET`: NextAuth 암호화 키
+* `NEXTAUTH_URL`: 애플리케이션 기본 URL
 
-## Running locally
+## 프로젝트 구조
 
-You will need to use the environment variables [defined in `.env.example`](.env.example) to run Next.js AI Chatbot. It's recommended you use [Vercel Environment Variables](https://vercel.com/docs/projects/environment-variables) for this, but a `.env` file is all that is necessary.
+* `components/`: UI 컴포넌트 (AuthForm, Toast, Popup 등)
+* `app/`: Next.js App Router 기반 페이지
+* `lib/`: 유틸 함수 및 API 연동 로직
+* `public/`: 정적 파일 (이미지, 폰트 등)
+* `tests/`: 테스트 코드
 
-> Note: You should not commit your `.env` file or it will expose secrets that will allow others to control access to your various AI and authentication provider accounts.
+## 향후 계획
 
-1. Install Vercel CLI: `npm i -g vercel`
-2. Link local instance with Vercel and GitHub accounts (creates `.vercel` directory): `vercel link`
-3. Download your environment variables: `vercel env pull`
+* 사용자 대화 기록 저장 및 검색 기능 추가
+* Grok 최신 버전 연동
+* 한국어 환경 최적화 지속
 
-```bash
-pnpm install
-pnpm dev
-```
+## 라이선스
 
-Your app template should now be running on [localhost:3000](http://localhost:3000).
+MIT License
+
+
+
+## 배포 방법
+1. 프로젝트 다운로드
+2. vercel.com 접속
+3. 로그인 / 회원가입
+4. 프로젝트 만들기 깃허브 임포트 하기
+5. AUTH_SECRET 환경변수 만들기 => 베포
+6. GROQ, XAI, neon, blob 프로젝트 연결 ( Vercel Marketplace 에서 찾기)
+7. 베포
+8. 완료
+
+## 로컬환경
+pnpm build
+pnpm run
+
