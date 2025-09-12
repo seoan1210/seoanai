@@ -88,15 +88,16 @@ export async function POST(request: Request) {
 
     const session = await auth();
 
-    // 🔹 로그인 체크: userId 없으면 저장 금지
+    // 🔹 로그인 체크: 없으면 바로 거부
     if (!session?.user?.id) {
-      return new ChatSDKError('unauthorized:chat').toResponse();
+      return new ChatSDKError('unauthorized:chat', '로그인한 사용자만 대화를 보낼 수 있습니다.').toResponse();
     }
 
+    const userId = session.user.id;
     const userType: UserType = session.user.type;
 
     const messageCount = await getMessageCountByUserId({
-      id: session.user.id,
+      id: userId,
       differenceInHours: 24,
     });
 
@@ -109,15 +110,14 @@ export async function POST(request: Request) {
     if (!chat) {
       const title = await generateTitleFromUserMessage({ message });
 
-      // 🔹 로그인 유저만 저장 가능
       await saveChat({
         id,
-        userId: session.user.id,
+        userId,
         title,
         visibility: selectedVisibilityType,
       });
     } else {
-      if (chat.userId !== session.user.id) {
+      if (chat.userId !== userId) {
         return new ChatSDKError('forbidden:chat').toResponse();
       }
     }
@@ -134,7 +134,7 @@ export async function POST(request: Request) {
       country,
     };
 
-    // 🔹 로그인 유저만 메시지 저장
+    // 🔹 로그인한 userId 있는 경우만 메시지 저장
     await saveMessages({
       messages: [
         {
@@ -183,9 +183,7 @@ export async function POST(request: Request) {
 
         result.consumeStream();
 
-        dataStream.merge(
-          result.toUIMessageStream({ sendReasoning: true }),
-        );
+        dataStream.merge(result.toUIMessageStream({ sendReasoning: true }));
       },
       generateId: generateUUID,
       onFinish: async ({ messages }) => {
@@ -202,10 +200,7 @@ export async function POST(request: Request) {
 
         if (finalUsage) {
           try {
-            await updateChatLastContextById({
-              chatId: id,
-              context: finalUsage,
-            });
+            await updateChatLastContextById({ chatId: id, context: finalUsage });
           } catch (err) {
             console.warn('Unable to persist last usage for chat', id, err);
           }
@@ -233,30 +228,4 @@ export async function POST(request: Request) {
     console.error('Unhandled error in chat API:', error);
     return new ChatSDKError('offline:chat').toResponse();
   }
-}
-
-export async function DELETE(request: Request) {
-  const { searchParams } = new URL(request.url);
-  const id = searchParams.get('id');
-
-  if (!id) {
-    return new ChatSDKError('bad_request:api').toResponse();
-  }
-
-  const session = await auth();
-
-  // 🔹 로그인 체크
-  if (!session?.user?.id) {
-    return new ChatSDKError('unauthorized:chat').toResponse();
-  }
-
-  const chat = await getChatById({ id });
-
-  if (chat?.userId !== session.user.id) {
-    return new ChatSDKError('forbidden:chat').toResponse();
-  }
-
-  const deletedChat = await deleteChatById({ id });
-
-  return Response.json(deletedChat, { status: 200 });
 }
