@@ -42,7 +42,7 @@ function PureChatHeader({
           }}
         >
           <PlusIcon />
-          <span className="md:sr-only">New Chat</span>
+          <span className="md:sr-only">새 채팅</span>
         </Button>
       )}
 
