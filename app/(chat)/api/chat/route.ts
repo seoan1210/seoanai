@@ -60,7 +60,6 @@ export function getStreamContext() {
       }
     }
   }
-
   return globalStreamContext;
 }
 
@@ -89,7 +88,8 @@ export async function POST(request: Request) {
 
     const session = await auth();
 
-    if (!session?.user) {
+    // 🔹 로그인 체크: userId 없으면 저장 금지
+    if (!session?.user?.id) {
       return new ChatSDKError('unauthorized:chat').toResponse();
     }
 
@@ -107,10 +107,9 @@ export async function POST(request: Request) {
     const chat = await getChatById({ id });
 
     if (!chat) {
-      const title = await generateTitleFromUserMessage({
-        message,
-      });
+      const title = await generateTitleFromUserMessage({ message });
 
+      // 🔹 로그인 유저만 저장 가능
       await saveChat({
         id,
         userId: session.user.id,
@@ -135,6 +134,7 @@ export async function POST(request: Request) {
       country,
     };
 
+    // 🔹 로그인 유저만 메시지 저장
     await saveMessages({
       messages: [
         {
@@ -163,21 +163,13 @@ export async function POST(request: Request) {
           experimental_activeTools:
             selectedChatModel === 'chat-model-reasoning'
               ? []
-              : [
-                  'getWeather',
-                  'createDocument',
-                  'updateDocument',
-                  'requestSuggestions',
-                ],
+              : ['getWeather', 'createDocument', 'updateDocument', 'requestSuggestions'],
           experimental_transform: smoothStream({ chunking: 'word' }),
           tools: {
             getWeather,
             createDocument: createDocument({ session, dataStream }),
             updateDocument: updateDocument({ session, dataStream }),
-            requestSuggestions: requestSuggestions({
-              session,
-              dataStream,
-            }),
+            requestSuggestions: requestSuggestions({ session, dataStream }),
           },
           experimental_telemetry: {
             isEnabled: isProductionEnvironment,
@@ -192,9 +184,7 @@ export async function POST(request: Request) {
         result.consumeStream();
 
         dataStream.merge(
-          result.toUIMessageStream({
-            sendReasoning: true,
-          }),
+          result.toUIMessageStream({ sendReasoning: true }),
         );
       },
       generateId: generateUUID,
@@ -221,9 +211,7 @@ export async function POST(request: Request) {
           }
         }
       },
-      onError: () => {
-        return 'Oops, an error occurred!';
-      },
+      onError: () => 'Oops, an error occurred!',
     });
 
     const streamContext = getStreamContext();
@@ -257,7 +245,8 @@ export async function DELETE(request: Request) {
 
   const session = await auth();
 
-  if (!session?.user) {
+  // 🔹 로그인 체크
+  if (!session?.user?.id) {
     return new ChatSDKError('unauthorized:chat').toResponse();
   }
 
