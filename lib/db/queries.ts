@@ -35,10 +35,6 @@ import type { VisibilityType } from '@/components/visibility-selector';
 import { ChatSDKError } from '../errors';
 import type { LanguageModelV2Usage } from '@ai-sdk/provider';
 
-// Optionally, if not using email/pass login, you can
-// use the Drizzle adapter for Auth.js / NextAuth
-// https://authjs.dev/reference/adapter/drizzle
-
 // biome-ignore lint: Forbidden non-null assertion.
 const client = postgres(process.env.POSTGRES_URL!);
 const db = drizzle(client);
@@ -88,10 +84,17 @@ export async function saveChat({
   visibility,
 }: {
   id: string;
-  userId: string;
+  userId: string | null | undefined;
   title: string;
   visibility: VisibilityType;
 }) {
+  if (!userId) {
+    throw new ChatSDKError(
+      'unauthorized:chat',
+      '로그인된 사용자만 채팅을 저장할 수 있습니다.',
+    );
+  }
+
   try {
     return await db.insert(chat).values({
       id,
@@ -218,6 +221,13 @@ export async function saveMessages({
 }: {
   messages: Array<DBMessage>;
 }) {
+  if (!messages.every((msg) => msg.chatId)) {
+    throw new ChatSDKError(
+      'unauthorized:chat',
+      '로그인된 사용자만 메시지를 저장할 수 있습니다.',
+    );
+  }
+
   try {
     return await db.insert(message).values(messages);
   } catch (error) {
@@ -479,7 +489,6 @@ export async function updateChatLastContextById({
   context,
 }: {
   chatId: string;
-  // Store raw LanguageModelUsage to keep it simple
   context: LanguageModelV2Usage;
 }) {
   try {
