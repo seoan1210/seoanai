@@ -60,6 +60,7 @@ export function getStreamContext() {
       }
     }
   }
+
   return globalStreamContext;
 }
 
@@ -88,16 +89,14 @@ export async function POST(request: Request) {
 
     const session = await auth();
 
-    // 🔹 로그인 체크: 없으면 바로 거부
-    if (!session?.user?.id) {
-      return new ChatSDKError('unauthorized:chat', '로그인한 사용자만 대화를 보낼 수 있습니다.').toResponse();
+    if (!session?.user) {
+      return new ChatSDKError('unauthorized:chat').toResponse();
     }
 
-    const userId = session.user.id;
     const userType: UserType = session.user.type;
 
     const messageCount = await getMessageCountByUserId({
-      id: userId,
+      id: session.user.id,
       differenceInHours: 24,
     });
 
@@ -108,16 +107,18 @@ export async function POST(request: Request) {
     const chat = await getChatById({ id });
 
     if (!chat) {
-      const title = await generateTitleFromUserMessage({ message });
+      const title = await generateTitleFromUserMessage({
+        message,
+      });
 
       await saveChat({
         id,
-        userId,
+        userId: session.user.id,
         title,
         visibility: selectedVisibilityType,
       });
     } else {
-      if (chat.userId !== userId) {
+      if (chat.userId !== session.user.id) {
         return new ChatSDKError('forbidden:chat').toResponse();
       }
     }
@@ -134,7 +135,6 @@ export async function POST(request: Request) {
       country,
     };
 
-    // 🔹 로그인한 userId 있는 경우만 메시지 저장
     await saveMessages({
       messages: [
         {
@@ -163,13 +163,21 @@ export async function POST(request: Request) {
           experimental_activeTools:
             selectedChatModel === 'chat-model-reasoning'
               ? []
-              : ['getWeather', 'createDocument', 'updateDocument', 'requestSuggestions'],
+              : [
+                  'getWeather',
+                  'createDocument',
+                  'updateDocument',
+                  'requestSuggestions',
+                ],
           experimental_transform: smoothStream({ chunking: 'word' }),
           tools: {
             getWeather,
             createDocument: createDocument({ session, dataStream }),
             updateDocument: updateDocument({ session, dataStream }),
-            requestSuggestions: requestSuggestions({ session, dataStream }),
+            requestSuggestions: requestSuggestions({
+              session,
+              dataStream,
+            }),
           },
           experimental_telemetry: {
             isEnabled: isProductionEnvironment,
@@ -183,7 +191,11 @@ export async function POST(request: Request) {
 
         result.consumeStream();
 
-        dataStream.merge(result.toUIMessageStream({ sendReasoning: true }));
+        dataStream.merge(
+          result.toUIMessageStream({
+            sendReasoning: true,
+          }),
+        );
       },
       generateId: generateUUID,
       onFinish: async ({ messages }) => {
@@ -200,13 +212,18 @@ export async function POST(request: Request) {
 
         if (finalUsage) {
           try {
-            await updateChatLastContextById({ chatId: id, context: finalUsage });
+            await updateChatLastContextById({
+              chatId: id,
+              context: finalUsage,
+            });
           } catch (err) {
             console.warn('Unable to persist last usage for chat', id, err);
           }
         }
       },
-      onError: () => 'Oops, an error occurred!',
+      onError: () => {
+        return 'Oops, an error occurred!';
+      },
     });
 
     const streamContext = getStreamContext();
@@ -228,4 +245,29 @@ export async function POST(request: Request) {
     console.error('Unhandled error in chat API:', error);
     return new ChatSDKError('offline:chat').toResponse();
   }
+}
+
+export async function DELETE(request: Request) {
+  const { searchParams } = new URL(request.url);
+  const id = searchParams.get('id');
+
+  if (!id) {
+    return new ChatSDKError('bad_request:api').toResponse();
+  }
+
+  const session = await auth();
+
+  if (!session?.user) {
+    return new ChatSDKError('unauthorized:chat').toResponse();
+  }
+
+  const chat = await getChatById({ id });
+
+  if (chat?.userId !== session.user.id) {
+    return new ChatSDKError('forbidden:chat').toResponse();
+  }
+
+  const deletedChat = await deleteChatById({ id });
+
+  return Response.json(deletedChat, { status: 200 });
 }
